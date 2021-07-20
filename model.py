@@ -10,7 +10,7 @@ class MyModel(Model):
         self.flatten = tf.keras.layers.Flatten()
         self.d1 = tf.keras.layers.Dense(256,activation='relu',name='fc1')
         self.d2 = tf.keras.layers.Dense(128,activation='relu',name='fc2')
-        self.d3 = tf.keras.layers.Dense(1,activation='sigmoid')
+        self.d3 = tf.keras.layers.Dense(4,activation='sigmoid')
         
     def call(self,x):
         
