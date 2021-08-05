@@ -42,7 +42,7 @@ def MyModel():
 	x = Flatten()(x)
 	x = Dense(units = 4096, activation ='relu')(x)
 	x = Dense(units = 4096, activation ='relu')(x)
-	output = Dense(units = 4, activation ='sigmoid')(x)
+	output = Dense(units = 4, activation ='softmax')(x)
 	# creating the model
 
 	model = Model (inputs=input, outputs =output)

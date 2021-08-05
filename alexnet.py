@@ -37,7 +37,7 @@ class MyModel(tf.keras.Model):
         
         self.flatten = Flatten()
         self.drop = Dropout(0.4)
-        self.ou = Dense(1,activation='softmax')
+        self.ou = Dense(4,activation='softmax')
         
     def call(self,x):
         

@@ -136,7 +136,7 @@ class ConvolutionBlock(tf.keras.Model):
         return x
 
 class MyModel(tf.keras.Model):
-    def __init__(self,classes=1):
+    def __init__(self,classes=4):
         super(MyModel, self).__init__()
         
         self.conv = tf.keras.layers.Conv2D(64,7, strides = 2,name ='conv1')
