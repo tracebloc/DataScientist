@@ -26,8 +26,10 @@ class User():
 
         if len(self.__token) == 0:
             print("Please login and try again.")
+            print("\n")
         else:
             print("Token received.")
+            print("\n")
             return self.__token
 
     def login(self):
@@ -43,5 +45,6 @@ class User():
         except Exception as e:
             
             print("Login credentials are not correct. Please try again.")
+            print("\n")
             return ""
         return token
