@@ -518,6 +518,7 @@ class TrainingPlan:
 		#Create Experiment   
 		header = {'Authorization' : f"Token {self.__token}"}
 		re = requests.post(self.__url,headers= header,data=self.getParameters())
+		print(re.status_code)
 		if re.status_code == 201:
 
 			print("TrainingPlan created")
