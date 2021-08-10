@@ -2,7 +2,14 @@ import requests,json
 
 class TrainingPlan:
 
-	def __init__(self,datasetId,modelName,token):
+	"""
+		creating a training plan and assign data set
+		parameters: modelId, datasetId, token
+
+		methods:get_parameters, get_trainingplan
+		"""
+
+	def __init__(self,modelId,datasetId,token):
 
 		# self.__url = 'http://127.0.0.1:8000/experiments/'
 		self.__url = 'https://xray-backend.azurewebsites.net/experiments/'
@@ -11,7 +18,7 @@ class TrainingPlan:
 		self.__datasetId = datasetId
 		self.__epochs = 10
 		self.__cycles = 1
-		self.__modelName = modelName
+		self.__modelName = modelId
 		self.__optimizer = "adam"
 		self.__lossFunction = "categorical_crossentropy"
 		self.__learningRate = 0.001
@@ -517,8 +524,8 @@ class TrainingPlan:
 	def create(self):
 		#Create Experiment   
 		header = {'Authorization' : f"Token {self.__token}"}
-		re = requests.post(self.__url,headers= header,data=self.getParameters())
-		print(re.status_code)
+		re = requests.post(self.__url,headers= header,data=self.__getParameters())
+		# print(re.status_code)
 		if re.status_code == 201:
 
 			print("TrainingPlan created")
@@ -535,7 +542,7 @@ class TrainingPlan:
 			print(content['message'])
 
 
-	def getParameters(self):
+	def __getParameters(self):
 
 		parameters = {'message': 'training',
 					 'datasetId': self.__datasetId,
@@ -579,6 +586,48 @@ class TrainingPlan:
 					 }
 
 		return parameters
+
+	def getTrainingPlan(self):
+
+		print(f" \033[1mTraining Parameters\033[0m\n\n",
+			f"objective: {self.__objective}\n",
+			f"name: {self.__name}\n",
+			f"modelType: {self.__modelType}\n",
+			f"category: {self.__category}\n",
+			f"datasetId: {self.__datasetId}\n",
+			f"epochs: {self.__epochs}\n",
+			f"cycles: {self.__cycles}\n",
+			f"optimizer: {self.__optimizer}\n",
+			f"lossFunction: {self.__lossFunction}\n",
+			f"learningRate: {self.__learningRate}\n",
+			f"stepsPerEpoch: {self.__stepsPerEpoch}\n",
+			f"initialEpoch: {self.__initialEpoch}\n",
+			f"validationSteps: {self.__validationSteps}\n",
+			f"batchSize: {self.__batchSize}\n",
+			f"metrics: {self.__metrics}\n",
+			"\n \033[1mAugmentation Parameters\033[0m\n\n",
+			f"featurewise_center: {self.__featurewise_center}\n",
+			f"samplewise_center: {self.__samplewise_center}\n",
+			f"featurewise_std_normalization': {self.__featurewise_std_normalization}\n",
+			f"samplewise_std_normalization': {self.__samplewise_std_normalization}\n",
+			f"zca_whitening': {self.__zca_whitening}\n",
+			f"rotation_range': {self.__rotation_range}\n",
+			f"width_shift_range': {self.__width_shift_range}\n",
+			f"height_shift_range': {self.__height_shift_range}\n",
+			f"brightness_range': {self.__brightness_range}\n",
+			f"shear_range': {self.__shear_range}\n",
+			f"zoom_range': {self.__zoom_range}\n",
+			f"channel_shift_range': {self.__channel_shift_range}\n",
+			f"fill_mode': {self.__fill_mode}\n",
+			f"cval': {self.__cval}\n",
+			f"horizontal_flip': {self.__horizontal_flip}\n",
+			f"vertical_flip': {self.__vertical_flip}\n",
+			f"rescale': {self.__rescale}\n",
+			f"data_format': {self.__data_format}\n",
+			f"validation_split': {self.__validation_split}\n",
+			f"dtype': {self.__dtype}\n",
+			f"shuffle': {self.__shuffle}\n",
+			f"layersTrained': {self.__layers_non_trainable}\n")
 
 		
 

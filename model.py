@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Dense, Flatten, Conv2D, Input
 class MyModel(Model):
     def __init__(self):
         super(MyModel, self).__init__()
-        self.inputs = Input(shape=(48 ,48 ,3))
+#        self.inputs = Input(shape=(48 ,48 ,3))
         self.conv1 = tf.keras.layers.Conv2D(32,3,padding='same',activation='relu',name='conv_layer')
         self.pool = tf.keras.layers.MaxPool2D(strides=2,padding='same',name ='pooling_layer')
         self.flatten = tf.keras.layers.Flatten()
@@ -15,7 +15,7 @@ class MyModel(Model):
         
     def call(self,x):
 
-        x = self.inputs(x)
+#        x = self.inputs(x)
         x = self.conv1(x)
         x = self.pool(x)
         x = self.flatten(x)

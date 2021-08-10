@@ -24,28 +24,24 @@ class User():
 
     def getToken(self):
 
-        return self.__token
+        if len(self.__token) == 0:
+            print("Please login and try again.")
+        else:
+            print("Token received.")
+            return self.__token
 
     def login(self):
         '''Function to get Token for username provided'''
         try:
             url = "https://xray-backend.azurewebsites.net/api-token-auth/"
             r = requests.post(url, data = {"username": self.__username, "password": self.__password})
-            if r.status_code != 200:
+            if r.status_code == 200:
+                print("Login successful.")
                 print("\n")
-                print("Provide a valid username and password")
-                print("\n")
-
-            else:
-
-                print("\n")
-                print("Logged in")
-                print("\n")
-
             token = json.loads(r.text)['token']
         
         except Exception as e:
             
-            print("Error in logging in:: ")
+            print("Login credentials are not correct. Please try again.")
             return ""
         return token
