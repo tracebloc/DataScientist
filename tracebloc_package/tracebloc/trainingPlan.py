@@ -47,7 +47,7 @@ class TrainingPlan:
 		self.__validation_split = 0.1
 		self.__dtype = "None"
 		self.__shuffle = True
-		self.__layers_non_trainable = str([])
+		self.__layers_non_trainable = ''
 		self.__metrics = str(["accuracy"])
 		self.__objective = ""
 		self.__name = ""
