@@ -17,8 +17,8 @@ class Model():
     def __init__(self,modelname,token):
         self.__modelname = modelname
         self.__token = token
-        # self.__url = 'http://127.0.0.1:8000/upload/'
-        self.__url = 'https://xray-backend.azurewebsites.net/upload/'
+#        self.__url = 'http://127.0.0.1:8000/upload/'
+         self.__url = 'https://xray-backend.azurewebsites.net/upload/'
         self.__recievedModelname = self.upload()
 
     def getNewModelId(self):
