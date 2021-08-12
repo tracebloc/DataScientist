@@ -1,5 +1,5 @@
 #import useful libraries
-
+import getpass
 import requests
 import json
 import getpass, os
@@ -17,9 +17,10 @@ class User():
     username and password
     '''
 
-    def __init__(self,username='',password=''):
-        self.__username = username
-        self.__password = password
+    def __init__(self):
+
+        self.__username = input("Enter Username ")
+        self.__password = getpass.getpass("Enter Password ")
         self.__token = self.login()
 
     def getToken(self):
