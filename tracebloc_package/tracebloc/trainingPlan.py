@@ -11,8 +11,8 @@ class TrainingPlan:
 
 	def __init__(self,modelId,datasetId,token):
 
-		# self.__url = 'http://127.0.0.1:8000/experiments/'
-		self.__url = 'https://xray-backend.azurewebsites.net/experiments/'
+		self.__url = 'https://xray-backend-develop.azurewebsites.net/'
+		# self.__url = 'https://xray-backend.azurewebsites.net/'
 		self.__token = token
 		self.__message = 'training'
 		self.__datasetId = datasetId
@@ -53,6 +53,7 @@ class TrainingPlan:
 		self.__name = ""
 		self.__modelType = ""
 		self.__category = ""
+		self.__upperboundTime = 0
 
 	def setExperimentCategory(self,category:str):
 		'''
@@ -520,11 +521,46 @@ class TrainingPlan:
 	# 	else:
 	# 		print("Provide values as list of strings")
 
+	def __display_time(self,seconds, granularity=5):
+                intervals = (
+                ('weeks', 604800),  # 60 * 60 * 24 * 7
+                ('days', 86400),    # 60 * 60 * 24
+                ('hours', 3600),    # 60 * 60
+                ('minutes', 60),
+                ('seconds', 1),)
+                result = []
+
+                for name, count in intervals:
+                    value = seconds // count
+                    if value:
+                        seconds -= value * count
+                        if value == 1:
+                            name = name.rstrip('s')
+                        result.append("{} {}".format(value, name))
+                return ', '.join(result[:granularity])
+
+
+	def getEstimate(self):
+
+		header = {'Authorization' : f"Token {self.__token}"}
+		re = requests.post(f"{self.__url}flops/",headers= header,data={'datasetId':self.__datasetId,
+			'batchSize':self.__batchSize,'noOfEpochs':self.__epochs,'modelName':self.__modelName})
+		# print(re.status_code)
+		if re.status_code == 200:
+
+			body_unicode = re.content.decode('utf-8')
+			content = int(json.loads(body_unicode))
+			self.__upperboundTime = content
+			cycleTime = content * self.__cycles
+			display = self.__display_time(cycleTime)
+
+			print(f"It will take around {display} to complete {self.__cycles} cycles for given training plan.")
+
 
 	def create(self):
 		#Create Experiment   
 		header = {'Authorization' : f"Token {self.__token}"}
-		re = requests.post(self.__url,headers= header,data=self.__getParameters())
+		re = requests.post(f"{self.__url}experiments/",headers= header,data=self.__getParameters())
 		# print(re.status_code)
 		if re.status_code == 201:
 
@@ -534,9 +570,7 @@ class TrainingPlan:
 			print(f"with experiment_id:{content['id']}\n")
 			data = {"experiment_id":content['id']}
 			#Send training request to server
-			# self.__url = "http://127.0.0.1:8000/training/"
-			self.__url = "https://xray-backend.azurewebsites.net/training/"
-			r = requests.post(self.__url, headers = header, data = data )
+			r = requests.post(f"{self.__url}training/", headers = header, data = data )
 			body_unicode = r.content.decode('utf-8')
 			content = json.loads(body_unicode)
 			print(content['message'])
@@ -582,7 +616,8 @@ class TrainingPlan:
 					 'objective': self.__objective,
 					 'name': self.__name,
 					 'modelType': self.__modelType,
-					 'category': self.__category
+					 'category': self.__category,
+					 'upperboundTime': self.__upperboundTime
 					 }
 
 		return parameters
