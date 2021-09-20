@@ -12,7 +12,7 @@ class TrainingPlan:
 	def __init__(self,modelId,datasetId,token):
 
 		self.__url = 'https://xray-backend-develop.azurewebsites.net/'
-		# self.__url = 'https://xray-backend.azurewebsites.net/'
+		# self.__url = 'http://127.0.0.1:8000/'
 		self.__token = token
 		self.__message = 'training'
 		self.__datasetId = datasetId
@@ -54,6 +54,15 @@ class TrainingPlan:
 		self.__modelType = ""
 		self.__category = ""
 		self.__upperboundTime = 0
+
+		header = {'Authorization' : f"Token {self.__token}"}
+		re = requests.post(f"{self.__url}check-model/",headers= header,data={'datasetId':self.__datasetId,'modelName':self.__modelName})
+		body_unicode = re.content.decode('utf-8')
+		content = json.loads(body_unicode)
+		if content["status"] == "failed":
+			print("Please ensure that modelid provided have same output clases as in dataset \nand input shape match the below condition:\nFor medical--> (None, 224, 224, 3)\nFor industrial--> (None, 48, 48, 3)")
+		else:
+			print("Model and dataset selected, please set parameters")
 
 	def setExperimentCategory(self,category:str):
 		'''
@@ -545,7 +554,7 @@ class TrainingPlan:
 		header = {'Authorization' : f"Token {self.__token}"}
 		re = requests.post(f"{self.__url}flops/",headers= header,data={'datasetId':self.__datasetId,
 			'batchSize':self.__batchSize,'noOfEpochs':self.__epochs,'modelName':self.__modelName})
-		# print(re.status_code)
+# 		print(re.status_code)
 		if re.status_code == 200:
 
 			body_unicode = re.content.decode('utf-8')

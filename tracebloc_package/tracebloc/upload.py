@@ -17,8 +17,8 @@ class Model():
     def __init__(self,modelname,token):
         self.__modelname = modelname
         self.__token = token
-#        self.__url = 'http://127.0.0.1:8000/upload/'
-        self.__url = 'https://xray-backend.azurewebsites.net/upload/'
+        self.__url = 'https://xray-backend-develop.azurewebsites.net/upload/'
+        # self.__url = 'http://127.0.0.1:8000/upload/'
         self.__recievedModelname = self.upload()
 
     def getNewModelId(self):
@@ -33,9 +33,10 @@ class Model():
         'upload_weights': open(f'{self.__modelname}_weights.pkl','rb')}
         values = {"model_name": self.__modelname}
         r = requests.post(self.__url, headers = header, files=files, data=values)
-        body_unicode = r.content.decode('utf-8')
-        content = json.loads(body_unicode)
+        
         if r.status_code == 202:
+            body_unicode = r.content.decode('utf-8')
+            content = json.loads(body_unicode)
             print("Upload successful.")
             print("\n")
             return content['model_name']
