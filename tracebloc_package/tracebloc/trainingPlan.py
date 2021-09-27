@@ -435,16 +435,16 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setRescale(self,rescale:int):
+	def setRescale(self,rescale:float):
 		'''
-		Integer. 
+		Float. 
 		If 0, no rescaling is applied, 
 		otherwise we multiply the data by the value provided 
 		(after applying all other transformations).
 		example: setRescale(2)
 		default: None
 		'''
-		if type(rescale) == int:
+		if type(rescale) == float:
 			self.__rescale = rescale
 		else:
 			print("Invalid input type given")
