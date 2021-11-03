@@ -14,6 +14,9 @@ class TrainingPlan:
 		self.__url = 'https://xray-backend-develop.azurewebsites.net/'
 		# self.__url = 'http://127.0.0.1:8000/'
 		self.__token = token
+		self.__earlystopCallback = {}
+		self.__reducelrCallback = {}
+		self.__callbacks = str()
 		self.__message = 'training'
 		self.__datasetId = datasetId
 		self.__epochs = 10
@@ -59,6 +62,7 @@ class TrainingPlan:
 		re = requests.post(f"{self.__url}check-model/",headers= header,data={'datasetId':self.__datasetId,'modelName':self.__modelName})
 		body_unicode = re.content.decode('utf-8')
 		content = json.loads(body_unicode)
+		print(content)
 		if content["status"] == "failed":
 			print("Please ensure that modelid provided have same output clases as in dataset \nand input shape match the below condition:\nFor medical--> (None, 224, 224, 3)\nFor industrial--> (None, 48, 48, 3)")
 		else:
@@ -530,6 +534,49 @@ class TrainingPlan:
 	# 	else:
 	# 		print("Provide values as list of strings")
 
+	def setearlystopCallback(self, monitor:str, patience:int):
+	    '''
+	    Stop training when a monitored metric has stopped improving.
+	    parameters: monitor: Quantity to be monitored,
+	                patience: Number of epochs with no improvement after which training will be stopped.
+	    example: setearlystopCallback('loss', 10)
+	    '''
+	    if type(monitor)== str and type(patience)==int:
+	        c = [monitor, patience]
+	        self.__earlystopCallback['earlystopping']= c
+	    else:
+	        print("Invalid datatype for arguments")
+
+	def setReducelrCallback(self, monitor:str, factor:float, patience:int, min_delta:float):
+	    '''
+	    Reduce learning rate when a metric has stopped improving.
+	    parameters: monitor: Quantity to be monitored,
+	                factor: factor by which the learning rate will be reduced. new_lr = lr * factor.
+	                patience: number of epochs with no improvement after which learning rate will be reduced.
+	                min_delta: threshold for measuring the new optimum, to only focus on significant changes.
+	    example: setearlystopCallback('loss', 10)
+	    '''
+	    if type(monitor)== str and type(factor)==float and type(patience)==int and type(min_delta)==float:
+	        c = [monitor, factor, patience, min_delta]
+	        self.__reducelrCallback['reducelr']= c
+	    else:
+	        print("Invalid datatype for arguments")
+
+
+	def __setCallbacks(self, earlystopCallback:dict, reducelrCallback:dict):
+		'''
+		List of dictionaries. 
+		List of tensorflow callbacks for training.
+		default: []
+		'''
+		c = []
+		if len(earlystopCallback) != 0:
+			c.append(earlystopCallback)
+		if len(reducelrCallback) != 0:
+			c.append(reducelrCallback)
+
+		self.__callbacks = str(c)
+
 	def __display_time(self,seconds, granularity=5):
                 intervals = (
                 ('weeks', 604800),  # 60 * 60 * 24 * 7
@@ -567,6 +614,10 @@ class TrainingPlan:
 
 
 	def create(self):
+		#check if any callback is set
+		if len(self.__earlystopCallback) != 0 or len(self.__reducelrCallback) != 0:
+			self.__setCallbacks(self.__earlystopCallback,self.__reducelrCallback)
+
 		#Create Experiment   
 		header = {'Authorization' : f"Token {self.__token}"}
 		re = requests.post(f"{self.__url}experiments/",headers= header,data=self.__getParameters())
@@ -626,7 +677,8 @@ class TrainingPlan:
 					 'name': self.__name,
 					 'modelType': self.__modelType,
 					 'category': self.__category,
-					 'upperboundTime': self.__upperboundTime
+					 'upperboundTime': self.__upperboundTime,
+					 'callbacks': self.__callbacks
 					 }
 
 		return parameters
@@ -671,7 +723,9 @@ class TrainingPlan:
 			f"validation_split': {self.__validation_split}\n",
 			f"dtype': {self.__dtype}\n",
 			f"shuffle': {self.__shuffle}\n",
-			f"layersTrained': {self.__layers_non_trainable}\n")
+			f"layersTrained': {self.__layers_non_trainable}\n",
+			f"earlystopCallback': {self.__earlystopCallback}\n",
+			f"reducelrCallback': {self.__reducelrCallback}\n")
 
 		
 
