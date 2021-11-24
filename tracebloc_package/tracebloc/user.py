@@ -36,7 +36,7 @@ class User():
     def login(self):
         '''Function to get Token for username provided'''
         try:
-            url = "https://xray-backend.azurewebsites.net/api-token-auth/"
+            url = "https://xray-backend-develop.azurewebsites.net/api-token-auth/"
             r = requests.post(url, data = {"username": self.__username, "password": self.__password})
             if r.status_code == 200:
                 print("Login successful.")
