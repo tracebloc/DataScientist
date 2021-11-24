@@ -1,218 +1,127 @@
-import tensorflow as tf
-from tensorflow.keras.layers import Input
+# import necessary layers  
+from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, ZeroPadding2D,\
+     Flatten, BatchNormalization, AveragePooling2D, Dense, Activation, Add 
+from tensorflow.keras.models import Model
+from tensorflow.keras import activations
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.regularizers import l2
 
-class IdentityBlock(tf.keras.layers.Layer):
-    def __init__(self,f,filters,stage,block):
-        """
-    Implementation of the identity block
-    
-    Arguments:
-    f -- integer, specifying the shape of the middle CONV's window for the main path
-    filters -- python list of integers, defining the number of filters in the CONV layers of the main path
-    stage -- integer, used to name the layers, depending on their position in the network
-    block -- string/character, used to name the layers, depending on their position in the network
-    
-    Returns:
-    X -- output of the identity block, tensor of shape (n_H, n_W, n_C)
-    """
-        super(IdentityBlock, self).__init__(name='')
-        
-        # defining name basis
-        conv_name_base = 'res' + str(stage) + block + '_branch'
-        bn_name_base = 'bn' + str(stage) + block + '_branch'
-        
-        #Retrieve filters
-        F1,F2,F3 = filters
-        
-        self.conv1 = tf.keras.layers.Conv2D(filters=F1, kernel_size = (1,1),
-                                            strides=(1,1),padding='valid',
-                                           name=conv_name_base+'2a')
-        self.bn1 = tf.keras.layers.BatchNormalization(axis=3,name=bn_name_base+'2a')
-        
-        
-        self.conv2 = tf.keras.layers.Conv2D(filters=F2, kernel_size=(f,f),strides=(1,1),
-                                            padding='same', name=conv_name_base+'2b')
-        self.bn2 = tf.keras.layers.BatchNormalization(axis=3,name=bn_name_base+'2b')
-        
-        
-        self.conv3 = tf.keras.layers.Conv2D(filters=F3, kernel_size=(1,1), strides=(1,1),
-                                           padding='valid',name=conv_name_base+'2c')
-        self.bn3 = tf.keras.layers.BatchNormalization(axis=3, name=bn_name_base+'2c')
-        
-        
-        self.act = tf.keras.layers.Activation('relu')
-        self.add = tf.keras.layers.Add()
-        
-    def call(self,input_tensor):
-        #First component of main path
-        x = self.conv1(input_tensor)
-        x = self.bn1(x)
-        x = self.act(x)
-        
-        #second component of main path
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = self.act(x)
-        
-        
-        
-        #third component of main path
-        x = self.conv3(x)
-        x = self.bn3(x)
-        
-        #shortcut path Final step
-        x = self.add([x, input_tensor])
-        x = self.act(x)
-        
-        return x
+### Combine the above functions to build 50 layers resnet. 
+def MyModel(classes=3):
 
-class ConvolutionBlock(tf.keras.layers.Layer):
-    def __init__(self,f,filters,stage,block,s =2):
-        """
-    Implementation of the convolutional block as defined in Figure 4
-    
-    Arguments:
-    f -- integer, specifying the shape of the middle CONV's window for the main path
-    filters -- python list of integers, defining the number of filters in the CONV layers of the main path
-    stage -- integer, used to name the layers, depending on their position in the network
-    block -- string/character, used to name the layers, depending on their position in the network
-    s -- Integer, specifying the stride to be used
-    
-    Returns:
-    X -- output of the convolutional block, tensor of shape (n_H, n_W, n_C)
-    """
-        super(ConvolutionBlock, self).__init__(name='')
-        
-        # defining name basis
-        conv_name_base = 'res' + str(stage) + block + '_branch'
-        bn_name_base = 'bn' + str(stage) + block + '_branch'
-        
-        #Retrieve filters
-        F1,F2,F3 = filters
-        
-        self.conv1 = tf.keras.layers.Conv2D(filters=F1, kernel_size = (1,1),
-                                            strides=(s,s),
-                                            name=conv_name_base+'2a')
-        self.bn1 = tf.keras.layers.BatchNormalization(axis=3,name=bn_name_base+'2a')
-        
-        
-        self.conv2 = tf.keras.layers.Conv2D(filters=F2, kernel_size=(f,f),strides=(1,1),
-                                            padding='same', name=conv_name_base+'2b')
-        self.bn2 = tf.keras.layers.BatchNormalization(axis=3,name=bn_name_base+'2b')
-        
-        
-        self.conv3 = tf.keras.layers.Conv2D(filters=F3, kernel_size=(1,1), strides=(1,1),
-                                           padding='valid',name=conv_name_base+'2c')
-        self.bn3 = tf.keras.layers.BatchNormalization(axis=3, name=bn_name_base+'2c')
-        
-        self.conv_short = tf.keras.layers.Conv2D(filters=F3, kernel_size=(1,1),
-                                                 strides=(s,s),padding='valid',
-                                                 name=conv_name_base+'1')
-        self.bns = tf.keras.layers.BatchNormalization(axis=3, name=bn_name_base+'1')
-        
-        self.act = tf.keras.layers.Activation('relu')
-        self.add = tf.keras.layers.Add()
-        
-    def call(self,input_tensor):
-        #First component of main path
-        x = self.conv1(input_tensor)
-        x = self.bn1(x)
-        x = self.act(x)
-        
-        #second component of main path
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = self.act(x)
-        
-        #third component of main path
-        x = self.conv3(x)
-        x = self.bn3(x)
-        
-        #shortcut path Final step
-        input_tensor = self.conv_short(input_tensor)
-        input_tensor = self.bns(input_tensor)
-        x = self.add([x, input_tensor])
-        x = self.act(x)
-        
-        return x
-    
-    
-class MyModel(tf.keras.Model):
-    def __init__(self,classes=10):
-        super(MyModel, self).__init__()
-        
-        self.conv = tf.keras.layers.Conv2D(64,7, strides = 2,name ='conv1')
-        self.bn = tf.keras.layers.BatchNormalization(axis = 3, name= 'bn_conv1')
-        self.act = tf.keras.layers.Activation('relu')
-        self.maxpool = tf.keras.layers.MaxPool2D((3,3),strides=(2,2))
-        
-        self.conblock1 = ConvolutionBlock(f=3, filters=[64, 64, 256],
-                                          stage=2, block='a', s=1)
-        self.idenblock1 = IdentityBlock(3, [64, 64, 256], stage=2, block='b')
-        self.idenblock2 = IdentityBlock(3, [64, 64, 256], stage=2, block='c')
-        
-        self.conblock2 = ConvolutionBlock(f = 3, filters = [128, 128, 512],
-                                          stage = 3, block='a', s = 2)
-        self.idenblock3 = IdentityBlock(3, [128, 128, 512], stage=3, block='b')
-        self.idenblock4 = IdentityBlock(3, [128, 128, 512], stage=3, block='c')
-        self.idenblock5 = IdentityBlock(3, [128, 128, 512], stage=3, block='d')
-        
-        self.conblock3 = ConvolutionBlock(f = 3, filters = [256, 256, 1024],
-                                          stage = 4, block='a', s = 2)
-        self.idenblock6 = IdentityBlock(3, [256, 256, 1024], stage=4, block='b')
-        self.idenblock7 = IdentityBlock(3, [256, 256, 1024], stage=4, block='c')
-        self.idenblock8 = IdentityBlock(3, [256, 256, 1024], stage=4, block='d')
-        self.idenblock9 = IdentityBlock(3, [256, 256, 1024], stage=4, block='e')
-        self.idenblock10 = IdentityBlock(3, [256, 256, 1024], stage=4, block='f')
-        
-        self.conblock4 = ConvolutionBlock(f = 3, filters = [512, 512, 2048],
-                                          stage = 5, block='a', s = 2)
-        self.idenblock11 = IdentityBlock(3, [512, 512, 2048], stage=5, block='b')
-        self.idenblock12 = IdentityBlock(3, [512, 512, 2048], stage=5, block='c')
-        
-        
-        
-        self.avg_pool = tf.keras.layers.AveragePooling2D((2,2), name="avg_pool")
-        self.flat = tf.keras.layers.Flatten()
-        self.classifier = tf.keras.layers.Dense(classes, activation='softmax',
-                                                name='fc' + str(classes))
-        
-    def call(self, input_tensor):
-        
-        # Stage 1
-        x = self.conv(input_tensor)
-        x = self.bn(x)
-        x = self.act(x)
-        x = self.maxpool(x)
-        
-        # Stage 2
-        x = self.conblock1(x)
-        x = self.idenblock1(x)
-        x = self.idenblock2(x)
-        
-        # Stage 3
-        x = self.conblock2(x)
-        x = self.idenblock3(x)
-        x = self.idenblock4(x)
-        x = self.idenblock5(x)
-        
-        # Stage 4
-        x = self.conblock3(x)
-        x = self.idenblock6(x)
-        x = self.idenblock7(x)
-        x = self.idenblock8(x)
-        x = self.idenblock9(x)
-        x = self.idenblock10(x)
-        
-        # Stage 5
-        x = self.conblock4(x)
-        x = self.idenblock11(x)
-        x = self.idenblock12(x)
-        
-        # AVGPOOL
-        x = self.avg_pool(x)
-        
-        # output layer
-        x = self.flat(x)
-        x = self.classifier(x)
-        return x
+  input_im = Input(shape =(48,48,3))
+  x = ZeroPadding2D(padding=(3, 3))(input_im)
+
+  # 1st stage
+  # here we perform maxpooling, see the figure above
+
+  x = Conv2D(64, kernel_size=(7, 7), strides=(2, 2))(x)
+  x = BatchNormalization()(x)
+  x = Activation(activations.relu)(x)
+  x = MaxPooling2D((3, 3), strides=(2, 2))(x)
+
+  #2nd stage 
+  # frm here on only conv block and identity block, no pooling
+
+  x = res_conv(x, s=1, filters=(64, 256))
+  x = res_identity(x, filters=(64, 256))
+  x = res_identity(x, filters=(64, 256))
+
+  # 3rd stage
+
+  x = res_conv(x, s=2, filters=(128, 512))
+  x = res_identity(x, filters=(128, 512))
+  x = res_identity(x, filters=(128, 512))
+  x = res_identity(x, filters=(128, 512))
+
+  # 4th stage
+
+  x = res_conv(x, s=2, filters=(256, 1024))
+  x = res_identity(x, filters=(256, 1024))
+  x = res_identity(x, filters=(256, 1024))
+  x = res_identity(x, filters=(256, 1024))
+  x = res_identity(x, filters=(256, 1024))
+  x = res_identity(x, filters=(256, 1024))
+
+  # 5th stage
+
+  x = res_conv(x, s=2, filters=(512, 2048))
+  x = res_identity(x, filters=(512, 2048))
+  x = res_identity(x, filters=(512, 2048))
+
+  # ends with average pooling and dense connection
+
+  x = AveragePooling2D((2, 2), padding='same')(x)
+
+  x = Flatten()(x)
+  x = Dense(classes, activation='softmax', kernel_initializer='he_normal')(x) #multi-class
+
+  # define the model 
+
+  model = Model(inputs=input_im, outputs=x, name='Resnet50')
+
+  return model
+
+
+def res_identity(x, filters): 
+  ''' renet block where dimension doesnot change.
+  The skip connection is just simple identity conncection
+  we will have 3 blocks and then input will be added
+  '''
+  x_skip = x # this will be used for addition with the residual block 
+  f1, f2 = filters
+
+  #first block 
+  x = Conv2D(f1, kernel_size=(1, 1), strides=(1, 1), padding='valid', kernel_regularizer=l2(0.001))(x)
+  x = BatchNormalization()(x)
+  x = Activation(activations.relu)(x)
+
+  #second block # bottleneck (but size kept same with padding)
+  x = Conv2D(f1, kernel_size=(3, 3), strides=(1, 1), padding='same', kernel_regularizer=l2(0.001))(x)
+  x = BatchNormalization()(x)
+  x = Activation(activations.relu)(x)
+
+  # third block activation used after adding the input
+  x = Conv2D(f2, kernel_size=(1, 1), strides=(1, 1), padding='valid', kernel_regularizer=l2(0.001))(x)
+  x = BatchNormalization()(x)
+  # x = Activation(activations.relu)(x)
+
+  # add the input 
+  x = Add()([x, x_skip])
+  x = Activation(activations.relu)(x)
+
+  return x
+
+def res_conv(x, s, filters):
+  '''
+  here the input size changes, when it goes via conv blocks
+  so the skip connection uses a projection (conv layer) matrix
+  ''' 
+  x_skip = x
+  f1, f2 = filters
+
+  # first block
+  x = Conv2D(f1, kernel_size=(1, 1), strides=(s, s), padding='valid', kernel_regularizer=l2(0.001))(x)
+  # when s = 2 then it is like downsizing the feature map
+  x = BatchNormalization()(x)
+  x = Activation(activations.relu)(x)
+
+  # second block
+  x = Conv2D(f1, kernel_size=(3, 3), strides=(1, 1), padding='same', kernel_regularizer=l2(0.001))(x)
+  x = BatchNormalization()(x)
+  x = Activation(activations.relu)(x)
+
+  #third block
+  x = Conv2D(f2, kernel_size=(1, 1), strides=(1, 1), padding='valid', kernel_regularizer=l2(0.001))(x)
+  x = BatchNormalization()(x)
+
+  # shortcut 
+  x_skip = Conv2D(f2, kernel_size=(1, 1), strides=(s, s), padding='valid', kernel_regularizer=l2(0.001))(x_skip)
+  x_skip = BatchNormalization()(x_skip)
+
+  # add 
+  x = Add()([x, x_skip])
+  x = Activation(activations.relu)(x)
+
+  return x

@@ -3,11 +3,11 @@ from tensorflow.keras.layers import Input, Conv2D
 from tensorflow.keras.layers import MaxPool2D, Flatten, Dense 
 from tensorflow.keras import Model
 
-def MyModel():
+def MyModel(classes=3):
 
 	# input
 
-	input = Input(shape =(224,224,3))
+	input = Input(shape =(48,48,3))
 	# 1st Conv Block
 
 	x = Conv2D (filters =64, kernel_size =3, padding ='same', activation='relu')(input)
@@ -42,7 +42,7 @@ def MyModel():
 	x = Flatten()(x)
 	x = Dense(units = 4096, activation ='relu')(x)
 	x = Dense(units = 4096, activation ='relu')(x)
-	output = Dense(units = 2, activation ='softmax')(x)
+	output = Dense(units = classes, activation ='softmax')(x)
 	# creating the model
 
 	model = Model (inputs=input, outputs =output)
