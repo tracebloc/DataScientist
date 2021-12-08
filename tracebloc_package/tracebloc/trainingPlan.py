@@ -16,6 +16,9 @@ class TrainingPlan:
 		self.__token = token
 		self.__earlystopCallback = {}
 		self.__reducelrCallback = {}
+		self.__modelCheckpointCallback = {}
+		self.__terminateOnNaNCallback = {}
+		self.__learningRateScheduler = {}
 		self.__callbacks = str()
 		self.__message = 'training'
 		self.__datasetId = datasetId
@@ -534,7 +537,42 @@ class TrainingPlan:
 	# 	else:
 	# 		print("Provide values as list of strings")
 
-	def setearlystopCallback(self, monitor:str, patience:int):
+	def setLearningRateSchedulerCallback(self, factor:float, patience:int):
+		'''
+	    Schedule learning rate at some patience to change by a factor.
+	    parameters: factor: factor by which the learning rate will be reduced. new_lr = lr * tf.math.exp(-factor).
+	                patience: Number of epochs after which lr will be updated.
+	    example: setearlystopCallback(0.1, 10)
+	    '''
+	    if type(factor)== float and type(patience)==int:
+			c = [factor, patience]
+			self.__learningRateScheduler['learningRateScheduler']= c
+		else:
+			print("Invalid datatype for arguments")
+
+	def setTerminateOnNaNCallback(self):
+		'''
+		Callback that terminates training when a NaN loss is encountered.
+		'''
+		c = ['']
+		self.__terminateOnNaNCallback['terminateOnNaN'] = c
+
+	def setModelCheckpointCallback(self, monitor:str, save_best_only:bool):
+		'''
+		Callback to save the model weights.
+		parameters: monitor: Quantity to be monitored,
+	                save_best_only:  if save_best_only=True, it only saves when the model is considered the "best" 
+	                                 and the latest best model according to the quantity monitored will not be overwritten.
+	    example: setModelCheckpointCallback('val_loss', True)
+		'''
+
+		if type(monitor)== str and type(save_best_only)==bool:
+			c = [monitor, save_best_only]
+			self.__modelCheckpointCallback['modelCheckpoint']= c
+		else:
+			print("Invalid datatype for arguments")
+
+	def setEarlystopCallback(self, monitor:str, patience:int):
 	    '''
 	    Stop training when a monitored metric has stopped improving.
 	    parameters: monitor: Quantity to be monitored,
@@ -563,17 +601,23 @@ class TrainingPlan:
 	        print("Invalid datatype for arguments")
 
 
-	def __setCallbacks(self, earlystopCallback:dict, reducelrCallback:dict):
+	def __setCallbacks(self):
 		'''
 		List of dictionaries. 
 		List of tensorflow callbacks for training.
 		default: []
 		'''
 		c = []
-		if len(earlystopCallback) != 0:
-			c.append(earlystopCallback)
-		if len(reducelrCallback) != 0:
-			c.append(reducelrCallback)
+		if len(self.__reducelrCallback) != 0:
+			c.append(self.__reducelrCallback)
+		if len(self.__earlystopCallback) != 0:
+			c.append(self.__earlystopCallback)
+		if len(self.__modelCheckpointCallback) != 0:
+			c.append(self.__modelCheckpointCallback)
+		if len(self.__terminateOnNaNCallback) != 0:
+			c.append(self.__terminateOnNaNCallback)
+		if len(self.__learningRateScheduler) != 0:
+			c.append(self.__learningRateScheduler)
 
 		self.__callbacks = str(c)
 
@@ -614,9 +658,8 @@ class TrainingPlan:
 
 
 	def create(self):
-		#check if any callback is set
-		if len(self.__earlystopCallback) != 0 or len(self.__reducelrCallback) != 0:
-			self.__setCallbacks(self.__earlystopCallback,self.__reducelrCallback)
+		#set callbacks
+		self.__setCallbacks()
 
 		#Create Experiment   
 		header = {'Authorization' : f"Token {self.__token}"}
@@ -701,6 +744,11 @@ class TrainingPlan:
 			f"validationSteps: {self.__validationSteps}\n",
 			f"batchSize: {self.__batchSize}\n",
 			f"metrics: {self.__metrics}\n",
+			f"layersTrained': {self.__layers_non_trainable}\n",
+			f"earlystopCallback': {self.__earlystopCallback}\n",
+			f"reducelrCallback': {self.__reducelrCallback}\n",
+			f"modelCheckpointCallback': {self.__modelCheckpointCallback}\n",
+			f"terminateOnNaNCallback': {self.__terminateOnNaNCallback}\n", 
 			"\n \033[1mAugmentation Parameters\033[0m\n\n",
 			f"featurewise_center: {self.__featurewise_center}\n",
 			f"samplewise_center: {self.__samplewise_center}\n",
@@ -722,10 +770,7 @@ class TrainingPlan:
 			f"data_format': {self.__data_format}\n",
 			f"validation_split': {self.__validation_split}\n",
 			f"dtype': {self.__dtype}\n",
-			f"shuffle': {self.__shuffle}\n",
-			f"layersTrained': {self.__layers_non_trainable}\n",
-			f"earlystopCallback': {self.__earlystopCallback}\n",
-			f"reducelrCallback': {self.__reducelrCallback}\n")
+			f"shuffle': {self.__shuffle}\n")
 
 		
 
