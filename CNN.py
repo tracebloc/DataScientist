@@ -3,7 +3,7 @@ from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout, Flat
 from tensorflow.keras import Sequential
 
 
-def MyModel(input_shape=(48,48,3),classes=3):
+def MyModel(input_shape=(224,224,3),classes=2):
 
     base_mobilenet_model = MobileNet(input_shape =  input_shape,
                                  include_top = False, weights = None)
