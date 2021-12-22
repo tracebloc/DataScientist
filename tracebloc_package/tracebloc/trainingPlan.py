@@ -544,7 +544,7 @@ class TrainingPlan:
 	                patience: Number of epochs after which lr will be updated.
 	    example: setearlystopCallback(0.1, 10)
 	    '''
-	    if type(factor)== float and type(patience)==int:
+		if type(factor)== float and type(patience)==int:
 			c = [factor, patience]
 			self.__learningRateScheduler['learningRateScheduler']= c
 		else:
