@@ -6,7 +6,7 @@ import getpass, os
 import ast
 import uuid
 from .upload import Model
-from .trainingPlan import TrainingPlan
+from .linkModelDataSet import LinkModelDataSet
 
 class User():
 
@@ -67,5 +67,5 @@ class User():
         return: training plan object
         """
 
-        trainingObject = TrainingPlan(modelId,datasetId,self.__token)
+        trainingObject = LinkModelDataSet(modelId,datasetId,self.__token)
         return trainingObject

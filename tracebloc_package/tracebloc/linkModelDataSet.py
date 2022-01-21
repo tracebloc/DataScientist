@@ -1,6 +1,6 @@
 import requests,json
 
-class TrainingPlan:
+class LinkModelDataSet:
 
 	"""
 		creating a training plan and assign data set
@@ -71,7 +71,7 @@ class TrainingPlan:
 		else:
 			print("Model and dataset selected, please set parameters")
 
-	def setExperimentCategory(self,category:str):
+	def category(self,category:str):
 		'''
 		String.
 		Category of experiment, like classification
@@ -82,7 +82,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setModelType(self,modelType:str):
+	def modelType(self,modelType:str):
 		'''
 		String.
 		Type of model used in the experiment, like VGGNET
@@ -93,7 +93,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setExperimentName(self,name:str):
+	def name(self,name:str):
 		'''
 		String.
 		Name of the experiment
@@ -104,7 +104,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setExperimentObjective(self,objective:str):
+	def objective(self,objective:str):
 		'''
 		String.
 		Objective of the experiment
@@ -115,9 +115,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setEpochs(self,epochs:int):
+	def epochs(self,epochs:int):
 		'''
-		Integer. 
+		Integer.
 		Number of epochs to train the model.
 		An epoch is an iteration over the entire data provided.
 		Note that in conjunction with initial_epoch, epochs is to be understood as "final epoch".
@@ -131,7 +131,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type or value '0' given")
 
-	def setCycles(self,cycles:int):
+	def cycles(self,cycles:int):
 		'''
 		Set number of cycles
 		parameters: integer type values.
@@ -143,7 +143,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type or value '0' given")
 
-	def setOptimizer(self,optimizer:str):
+	def optimizer(self,optimizer:str):
 		'''
 		Set optimizer
 		parameters: string type values.
@@ -160,7 +160,7 @@ class TrainingPlan:
 		except:
 			print(f"Please provide supported optimizers: {o}")
 
-	def setLossFunction(self,lossFunction:str):
+	def lossFunction(self,lossFunction:str):
 		'''
 		Set loss function
 		parameters: string type values.
@@ -175,8 +175,7 @@ class TrainingPlan:
 		except:
 			print(f"Please provide supported loss functions: {l}")
 
-
-	def setLearningrate(self,learningRate:float):
+	def learningRate(self,learningRate:float):
 		'''
 		Set learning rate
 		parameters: float type values.
@@ -188,7 +187,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type or value '0' given")
 
-	def setStepsPerEpoch(self,stepsPerEpoch:int):
+	def stepsPerEpoch(self,stepsPerEpoch:int):
 		'''
 		 Integer.
 		 Total number of steps (batches of samples) before declaring
@@ -201,9 +200,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type or value '0' given")
 
-	def setInitialEpoch(self,initialEpoch:int):
+	def initialEpoch(self,initialEpoch:int):
 		'''
-		Integer. Epoch at which to start training 
+		Integer. Epoch at which to start training
 		(useful for resuming a previous training run).
 		example: setInitialEpoch(2)
 		default: 0
@@ -213,9 +212,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setValidationSteps(self,validationSteps:int):
+	def validationSteps(self,validationSteps:int):
 		'''
-		Integer. Total number of steps (batches of samples) to draw before stopping 
+		Integer. Total number of steps (batches of samples) to draw before stopping
 		when performing validation at the end of every epoch.
 		example: setValidationSteps(10)
 		default: None
@@ -225,9 +224,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type or value '0' given")
 
-	def setBatchSize(self,batchSize:int):
+	def batchSize(self,batchSize:int):
 		'''
-		Integer. 
+		Integer.
 		Number of samples per gradient update.
 		example: setBatchSize(16)
 		default: 32
@@ -237,7 +236,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setFeaturewiseCenter(self,featurewise_center:bool):
+	def featurewise_center(self,featurewise_center:bool):
 		'''
 		Boolean.
 		Set input mean to 0 over the dataset, feature-wise.
@@ -249,9 +248,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setSamplewiseCenter(self,samplewise_center:bool):
+	def samplewise_center(self,samplewise_center:bool):
 		'''
-		Boolean. 
+		Boolean.
 		Set each sample mean to 0.
 		example: setSamplewiseCenter(True)
 		default: False
@@ -261,9 +260,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setFeaturewiseStdNormalization(self,featurewise_std_normalization:bool):
+	def featurewise_std_normalization(self,featurewise_std_normalization:bool):
 		'''
-		Boolean. 
+		Boolean.
 		Divide inputs by std of the dataset, feature-wise.
 		example: setFeaturewiseStdNormalization(True)
 		default: False
@@ -273,9 +272,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setSamplewiseStdNormalization(self,samplewise_std_normalization:bool):
+	def samplewise_std_normalization(self,samplewise_std_normalization:bool):
 		'''
-		Boolean. 
+		Boolean.
 		Divide each input by its std.
 		example: setSamplewiseStdNormalization(True)
 		default: False
@@ -285,9 +284,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setZcaWhitening(self,zca_whitening:bool):
+	def zca_whitening(self,zca_whitening:bool):
 		'''
-		Boolean. 
+		Boolean.
 		Apply ZCA whitening.
 		example: setZcaWhitening(True)
 		default: False
@@ -297,9 +296,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setRotationRange(self,rotation_range:int):
+	def rotation_range(self,rotation_range:int):
 		'''
-		Integer. 
+		Integer.
 		Degree range for random rotations.
 		example: setRotationRange(2)
 		default: 0
@@ -309,10 +308,10 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setWidthShiftRange(self,width_shift_range:float):
+	def width_shift_range(self,width_shift_range:float):
 		'''
 		Float.
-		Fraction of total width, if < 1, or pixels if >= 1. 
+		Fraction of total width, if < 1, or pixels if >= 1.
 		example: setWidthShiftRange(0.4)
 		default: 0.0
 		'''
@@ -321,7 +320,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setHeightShiftRange(self,height_shift_range:float):
+	def height_shift_range(self,height_shift_range:float):
 		'''
 		Float.
 		Fraction of total height, if < 1, or pixels if >= 1.
@@ -333,7 +332,7 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setBrightnessRange(self,brightness_range:tuple):
+	def brightness_range(self,brightness_range:tuple):
 		'''
 		Tuple of two floats.
 		Range for picking a brightness shift value from.
@@ -350,9 +349,9 @@ class TrainingPlan:
 		else:
 			print("Please provide tuple of two floats")
 
-	def setShearRange(self,shear_range:float):
+	def shear_range(self,shear_range:float):
 		'''
-		Float. 
+		Float.
 		Shear Intensity (Shear angle in counter-clockwise direction in degrees)
 		example: setShearRange(0.2)
 		default: 0.0
@@ -362,9 +361,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setZoomRange(self,zoom_range:float):
+	def zoom_range(self,zoom_range:float):
 		'''
-		Float. 
+		Float.
 		Range for random zoom. Range selected as for float value provided,
 		[lower, upper] = [1-zoom_range, 1+zoom_range].
 		example: setZoomRange(0.2)
@@ -375,9 +374,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setChannelShiftRange(self,channel_shift_range:float):
+	def channel_shift_range(self,channel_shift_range:float):
 		'''
-		Float. 
+		Float.
 		Range for random channel shifts.
 		example: setChannelShiftRange(0.4)
 		default: 0.0
@@ -387,14 +386,14 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setFillMode(self,fill_mode:str):
+	def fill_mode(self,fill_mode:str):
 		'''
 		String.
-		One of {"constant", "nearest", "reflect" or "wrap"}. 
+		One of {"constant", "nearest", "reflect" or "wrap"}.
 		Points outside the boundaries of the input are filled according to the given mode:
-		- 'constant': kkkkkkkk|abcd|kkkkkkkk (cval=k) 
-		- 'nearest': aaaaaaaa|abcd|dddddddd 
-		- 'reflect': abcddcba|abcd|dcbaabcd 
+		- 'constant': kkkkkkkk|abcd|kkkkkkkk (cval=k)
+		- 'nearest': aaaaaaaa|abcd|dddddddd
+		- 'reflect': abcddcba|abcd|dcbaabcd
 		- 'wrap': abcdabcd|abcd|abcdabcd
 		example: setFillMode("nearest")
 		default: "nearest"
@@ -406,9 +405,9 @@ class TrainingPlan:
 		except:
 			print(f"Please provide supported fill modes: {f}")
 
-	def setCval(self,cval:float):
+	def cval(self,cval:float):
 		'''
-		Float. 
+		Float.
 		Value used for points outside the boundaries when fill_mode = "constant".
 		example: setCval(0.3)
 		default: 0.0
@@ -418,9 +417,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setHorizontaFlip(self,horizontal_flip:bool):
+	def horizontal_flip(self,horizontal_flip:bool):
 		'''
-		Boolean. 
+		Boolean.
 		Randomly flip inputs horizontally.
 		example: setHorizontaFlip(True)
 		default: False
@@ -430,9 +429,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setVerticalFlip(self,vertical_flip:bool):
+	def vertical_flip(self,vertical_flip:bool):
 		'''
-		Boolean. 
+		Boolean.
 		Randomly flip inputs vertically.
 		example: setVerticalFlip(True)
 		default: False
@@ -442,11 +441,11 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setRescale(self,rescale:float):
+	def rescale(self,rescale:float):
 		'''
-		Float. 
-		If 0, no rescaling is applied, 
-		otherwise we multiply the data by the value provided 
+		Float.
+		If 0, no rescaling is applied,
+		otherwise we multiply the data by the value provided
 		(after applying all other transformations).
 		example: setRescale(2)
 		default: None
@@ -456,13 +455,13 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setDataFormat(self,data_format:str):
+	def data_format(self,data_format:str):
 		'''
-		String. 
-		Image data format, either "channels_first" or "channels_last". 
-		"channels_last" mode means that the images should have shape 
-		(samples, height, width, channels), 
-		"channels_first" mode means that the images should have shape 
+		String.
+		Image data format, either "channels_first" or "channels_last".
+		"channels_last" mode means that the images should have shape
+		(samples, height, width, channels),
+		"channels_first" mode means that the images should have shape
 		(samples, channels, height, width).
 		example: setDataFormat("channels_first")
 		default: None
@@ -474,9 +473,9 @@ class TrainingPlan:
 		except:
 			print(f"Please provide supported fill modes: {d}")
 
-	def setValidationSplit(self,validation_split:float):
+	def validation_split(self,validation_split:float):
 		'''
-		Float. 
+		Float.
 		Fraction of images reserved for validation (strictly between 0 and 1).
 		example: setValidationSplit(0.2)
 		default: 0.1
@@ -486,9 +485,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type or out of range[0,1]")
 
-	def setDtype(self,dtype:str):
+	def dtype(self,dtype:str):
 		'''
-		String. 
+		String.
 		Dtype to use for the generated arrays.
 		example: setDtype('float32')
 		default: None
@@ -498,9 +497,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setShuffle(self,shuffle:bool):
+	def shuffle(self,shuffle:bool):
 		'''
-		Boolean. 
+		Boolean.
 		Shuffles the image data.
 		example: setShuffle(False)
 		default: True
@@ -510,9 +509,9 @@ class TrainingPlan:
 		else:
 			print("Invalid input type given")
 
-	def setLayersNotToTrain(self,layers_non_trainable:list):
+	def layers_non_trainable(self,layers_non_trainable:list):
 		'''
-		List of strings. 
+		List of strings.
 		Freezes the layers name provided.
 		example: setLayersNotToTrain(['conv1','fc1'])
 		default: None
@@ -523,10 +522,10 @@ class TrainingPlan:
 		else:
 			print("Provide values as list of strings")
 
-	# def setMetrics(self,metrics:list):
+	# def metrics(self,metrics:list):
 	# 	'''
-	# 	List of strings. 
-	# 	List of metrics to be evaluated by the model 
+	# 	List of strings.
+	# 	List of metrics to be evaluated by the model
 	# 	during training and testing.
 	# 	example: setMetrics(['accuracy','mse'])
 	# 	default: ['accuracy']
@@ -539,31 +538,31 @@ class TrainingPlan:
 
 	def setLearningRateSchedulerCallback(self, factor:float, patience:int):
 		'''
-	    Schedule learning rate at some patience to change by a factor.
-	    parameters: factor: factor by which the learning rate will be reduced. new_lr = lr * tf.math.exp(-factor).
-	                patience: Number of epochs after which lr will be updated.
-	    example: setearlystopCallback(0.1, 10)
-	    '''
+		Schedule learning rate at some patience to change by a factor.
+		parameters: factor: factor by which the learning rate will be reduced. new_lr = lr * tf.math.exp(-factor).
+					patience: Number of epochs after which lr will be updated.
+		example: setearlystopCallback(0.1, 10)
+		'''
 		if type(factor)== float and type(patience)==int:
 			c = [factor, patience]
 			self.__learningRateScheduler['learningRateScheduler']= c
 		else:
 			print("Invalid datatype for arguments")
 
-	def setTerminateOnNaNCallback(self):
+	def terminateOnNaNCallback(self):
 		'''
 		Callback that terminates training when a NaN loss is encountered.
 		'''
 		c = ['']
 		self.__terminateOnNaNCallback['terminateOnNaN'] = c
 
-	def setModelCheckpointCallback(self, monitor:str, save_best_only:bool):
+	def modelCheckpointCallback(self, monitor:str, save_best_only:bool):
 		'''
 		Callback to save the model weights.
 		parameters: monitor: Quantity to be monitored,
-	                save_best_only:  if save_best_only=True, it only saves when the model is considered the "best" 
-	                                 and the latest best model according to the quantity monitored will not be overwritten.
-	    example: setModelCheckpointCallback('val_loss', True)
+					save_best_only:  if save_best_only=True, it only saves when the model is considered the "best"
+									 and the latest best model according to the quantity monitored will not be overwritten.
+		example: setModelCheckpointCallback('val_loss', True)
 		'''
 
 		if type(monitor)== str and type(save_best_only)==bool:
@@ -572,96 +571,95 @@ class TrainingPlan:
 		else:
 			print("Invalid datatype for arguments")
 
-	def setEarlystopCallback(self, monitor:str, patience:int):
-	    '''
-	    Stop training when a monitored metric has stopped improving.
-	    parameters: monitor: Quantity to be monitored,
-	                patience: Number of epochs with no improvement after which training will be stopped.
-	    example: setearlystopCallback('loss', 10)
-	    '''
-	    if type(monitor)== str and type(patience)==int:
-	        c = [monitor, patience]
-	        self.__earlystopCallback['earlystopping']= c
-	    else:
-	        print("Invalid datatype for arguments")
+	def earlystopCallback(self, monitor:str, patience:int):
+		'''
+		Stop training when a monitored metric has stopped improving.
+		parameters: monitor: Quantity to be monitored,
+					patience: Number of epochs with no improvement after which training will be stopped.
+		example: setearlystopCallback('loss', 10)
+		'''
+		if type(monitor)== str and type(patience)==int:
+			c = [monitor, patience]
+			self.__earlystopCallback['earlystopping']= c
+		else:
+			print("Invalid datatype for arguments")
 
-	def setReducelrCallback(self, monitor:str, factor:float, patience:int, min_delta:float):
-	    '''
-	    Reduce learning rate when a metric has stopped improving.
-	    parameters: monitor: Quantity to be monitored,
-	                factor: factor by which the learning rate will be reduced. new_lr = lr * factor.
-	                patience: number of epochs with no improvement after which learning rate will be reduced.
-	                min_delta: threshold for measuring the new optimum, to only focus on significant changes.
-	    example: setearlystopCallback('loss', 10)
-	    '''
-	    if type(monitor)== str and type(factor)==float and type(patience)==int and type(min_delta)==float:
-	        c = [monitor, factor, patience, min_delta]
-	        self.__reducelrCallback['reducelr']= c
-	    else:
-	        print("Invalid datatype for arguments")
-
+	def reducelrCallback(self, monitor:str, factor:float, patience:int, min_delta:float):
+		'''
+		Reduce learning rate when a metric has stopped improving.
+		parameters: monitor: Quantity to be monitored,
+					factor: factor by which the learning rate will be reduced. new_lr = lr * factor.
+					patience: number of epochs with no improvement after which learning rate will be reduced.
+					min_delta: threshold for measuring the new optimum, to only focus on significant changes.
+		example: setearlystopCallback('loss', 10)
+		'''
+		if type(monitor)== str and type(factor)==float and type(patience)==int and type(min_delta)==float:
+			c = [monitor, factor, patience, min_delta]
+			self.__reducelrCallback['reducelr']= c
+		else:
+			print("Invalid datatype for arguments")
 
 	def __setCallbacks(self):
-		'''
-		List of dictionaries. 
-		List of tensorflow callbacks for training.
-		default: []
-		'''
-		c = []
-		if len(self.__reducelrCallback) != 0:
-			c.append(self.__reducelrCallback)
-		if len(self.__earlystopCallback) != 0:
-			c.append(self.__earlystopCallback)
-		if len(self.__modelCheckpointCallback) != 0:
-			c.append(self.__modelCheckpointCallback)
-		if len(self.__terminateOnNaNCallback) != 0:
-			c.append(self.__terminateOnNaNCallback)
-		if len(self.__learningRateScheduler) != 0:
-			c.append(self.__learningRateScheduler)
+			'''
+			List of dictionaries.
+			List of tensorflow callbacks for training.
+			default: []
+			'''
+			c = []
+			if len(self.__reducelrCallback) != 0:
+				c.append(self.__reducelrCallback)
+			if len(self.__earlystopCallback) != 0:
+				c.append(self.__earlystopCallback)
+			if len(self.__modelCheckpointCallback) != 0:
+				c.append(self.__modelCheckpointCallback)
+			if len(self.__terminateOnNaNCallback) != 0:
+				c.append(self.__terminateOnNaNCallback)
+			if len(self.__learningRateScheduler) != 0:
+				c.append(self.__learningRateScheduler)
 
-		self.__callbacks = str(c)
+			self.__callbacks = str(c)
 
-	def __display_time(self,seconds, granularity=5):
-                intervals = (
-                ('weeks', 604800),  # 60 * 60 * 24 * 7
-                ('days', 86400),    # 60 * 60 * 24
-                ('hours', 3600),    # 60 * 60
-                ('minutes', 60),
-                ('seconds', 1),)
-                result = []
-
-                for name, count in intervals:
-                    value = seconds // count
-                    if value:
-                        seconds -= value * count
-                        if value == 1:
-                            name = name.rstrip('s')
-                        result.append("{} {}".format(value, name))
-                return ', '.join(result[:granularity])
-
-
-	def getEstimate(self):
-
-		header = {'Authorization' : f"Token {self.__token}"}
-		re = requests.post(f"{self.__url}flops/",headers= header,data={'datasetId':self.__datasetId,
-			'batchSize':self.__batchSize,'noOfEpochs':self.__epochs,'modelName':self.__modelName})
-# 		print(re.status_code)
-		if re.status_code == 200:
-
-			body_unicode = re.content.decode('utf-8')
-			content = int(json.loads(body_unicode))
-			self.__upperboundTime = content
-			cycleTime = content * self.__cycles
-			display = self.__display_time(cycleTime)
-
-			print(f"It will take around {display} to complete {self.__cycles} cycles for given training plan.")
+# 	def __display_time(self,seconds, granularity=5):
+# 		intervals = (
+# 		('weeks', 604800),  # 60 * 60 * 24 * 7
+# 		('days', 86400),    # 60 * 60 * 24
+# 		('hours', 3600),    # 60 * 60
+# 		('minutes', 60),
+# 		('seconds', 1),)
+# 		result = []
+#
+# 		for name, count in intervals:
+# 			value = seconds // count
+# 			if value:
+# 				seconds -= value * count
+# 				if value == 1:
+# 					name = name.rstrip('s')
+# 				result.append("{} {}".format(value, name))
+# 		return ', '.join(result[:granularity])
+#
+#
+# 	def getEstimate(self):
+#
+# 		header = {'Authorization' : f"Token {self.__token}"}
+# 		re = requests.post(f"{self.__url}flops/",headers= header,data={'datasetId':self.__datasetId,
+# 			'batchSize':self.__batchSize,'noOfEpochs':self.__epochs,'modelName':self.__modelName})
+# # 		print(re.status_code)
+# 		if re.status_code == 200:
+#
+# 			body_unicode = re.content.decode('utf-8')
+# 			content = int(json.loads(body_unicode))
+# 			self.__upperboundTime = content
+# 			cycleTime = content * self.__cycles
+# 			display = self.__display_time(cycleTime)
+#
+# 			print(f"It will take around {display} to complete {self.__cycles} cycles for given training plan.")
 
 
 	def create(self):
 		#set callbacks
 		self.__setCallbacks()
 
-		#Create Experiment   
+		#Create Experiment
 		header = {'Authorization' : f"Token {self.__token}"}
 		re = requests.post(f"{self.__url}experiments/",headers= header,data=self.__getParameters())
 		# print(re.status_code)
@@ -728,27 +726,30 @@ class TrainingPlan:
 
 	def getTrainingPlan(self):
 
-		print(f" \033[1mTraining Parameters\033[0m\n\n",
+		print(f" \033[1mTraining Description\033[0m\n\n",
 			f"objective: {self.__objective}\n",
 			f"name: {self.__name}\n",
 			f"modelType: {self.__modelType}\n",
 			f"category: {self.__category}\n",
 			f"datasetId: {self.__datasetId}\n",
+			"\n \033[1mTraining Parameters\033[0m\n\n",
 			f"epochs: {self.__epochs}\n",
 			f"cycles: {self.__cycles}\n",
-			f"optimizer: {self.__optimizer}\n",
-			f"lossFunction: {self.__lossFunction}\n",
-			f"learningRate: {self.__learningRate}\n",
 			f"stepsPerEpoch: {self.__stepsPerEpoch}\n",
 			f"initialEpoch: {self.__initialEpoch}\n",
 			f"validationSteps: {self.__validationSteps}\n",
 			f"batchSize: {self.__batchSize}\n",
+			f"validation_split': {self.__validation_split}\n",
+			"\n \033[1mHyperParameters\033[0m\n\n",
+			f"optimizer: {self.__optimizer}\n",
+			f"lossFunction: {self.__lossFunction}\n",
+			f"learningRate: {self.__learningRate}\n",
 			f"metrics: {self.__metrics}\n",
 			f"layersTrained': {self.__layers_non_trainable}\n",
 			f"earlystopCallback': {self.__earlystopCallback}\n",
 			f"reducelrCallback': {self.__reducelrCallback}\n",
 			f"modelCheckpointCallback': {self.__modelCheckpointCallback}\n",
-			f"terminateOnNaNCallback': {self.__terminateOnNaNCallback}\n", 
+			f"terminateOnNaNCallback': {self.__terminateOnNaNCallback}\n",
 			"\n \033[1mAugmentation Parameters\033[0m\n\n",
 			f"featurewise_center: {self.__featurewise_center}\n",
 			f"samplewise_center: {self.__samplewise_center}\n",
@@ -768,9 +769,5 @@ class TrainingPlan:
 			f"vertical_flip': {self.__vertical_flip}\n",
 			f"rescale': {self.__rescale}\n",
 			f"data_format': {self.__data_format}\n",
-			f"validation_split': {self.__validation_split}\n",
 			f"dtype': {self.__dtype}\n",
 			f"shuffle': {self.__shuffle}\n")
-
-		
-
