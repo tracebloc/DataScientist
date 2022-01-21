@@ -8,9 +8,9 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.regularizers import l2
 
 ### Combine the above functions to build 50 layers resnet. 
-def MyModel(classes=6):
+def MyModel(classes=3):
 
-  input_im = Input(shape =(224,224,3))
+  input_im = Input(shape =(48,48,3))
   x = ZeroPadding2D(padding=(3, 3))(input_im)
 
   # 1st stage

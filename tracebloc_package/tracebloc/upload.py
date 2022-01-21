@@ -23,7 +23,7 @@ class Model():
         self.__recievedModelname = self.upload()
 
     def getNewModelId(self):
-        print(self.__recievedModelname)
+        # print(self.__recievedModelname)
         return self.__recievedModelname
 
     def check(self):

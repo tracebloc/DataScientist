@@ -5,6 +5,8 @@ import json
 import getpass, os
 import ast
 import uuid
+from .upload import Model
+from .trainingPlan import TrainingPlan
 
 class User():
 
@@ -23,16 +25,6 @@ class User():
         self.__password = getpass.getpass("Enter Password ")
         self.__token = self.login()
 
-    def getToken(self):
-
-        if len(self.__token) == 0:
-            print("Please login and try again.")
-            print("\n")
-        else:
-            print("Token received.")
-            print("\n")
-            return self.__token
-
     def login(self):
         '''Function to get Token for username provided'''
         try:
@@ -42,10 +34,38 @@ class User():
                 print("Login successful.")
                 print("\n")
             token = json.loads(r.text)['token']
-        
+            return token
         except Exception as e:
             
             print("Login credentials are not correct. Please try again.")
             print("\n")
             return ""
-        return token
+
+    def uploadModel(self,modelname:str):
+
+        '''
+        Make sure model file and weights are in current directory
+        Parameters: modelname, token
+
+        modelname: model file name eg: vggnet, if file name is vggnet.py
+
+        *******
+        return: model unique Id
+        '''
+
+        model = Model(modelname,self.__token)
+        modelId = model.getNewModelId()
+        return modelId
+
+    def linkModelDataset(self,modelId:str,datasetId:str):
+
+        """
+        Role: Link and checks model & datasetId compatibility
+              create training plan object
+              
+        parameters: modelId, datasetId
+        return: training plan object
+        """
+
+        trainingObject = TrainingPlan(modelId,datasetId,self.__token)
+        return trainingObject
