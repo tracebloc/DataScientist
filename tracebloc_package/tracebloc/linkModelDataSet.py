@@ -72,11 +72,11 @@ class LinkModelDataSet:
 		if content["status"] == "failed":
 			text = colored("Assignment failed!", 'red')
 			print(text, "\n")
-			print(f"\nDataSet {self.__datasetId} expected parameters :")
-			print(f"\nclasses : {content['datasetClasses']}, shape: {content['datasetShape']}\n")
-			print(f"\n {self.__modelName} parameters :")
-			print(f"\nclasses : {content['outputClass']}, shape: {content['inputShape']}\n")
-			print("\nPlease change model parameters to match expected dataset parameters.")
+			print(f"DataSet '{self.__datasetId}' expected parameters :")
+			print(f"classes : {content['datasetClasses']}, shape: {content['datasetShape']}\n")
+			print(f"'{self.__modelName}' parameters :")
+			print(f"classes : {content['outputClass']}, shape: {content['inputShape']}\n")
+			print("Please change model parameters to match expected dataset parameters.")
 		elif content["status"] == "passed":
 			text = colored("Assignment successful!", 'green')
 			print(text, "\n")
@@ -677,7 +677,9 @@ class LinkModelDataSet:
 		if re.status_code == 201:
 			body_unicode = re.content.decode('utf-8')
 			content = json.loads(body_unicode)
-			print(f"Experiment created with id:{content['experimentKey']}\n")
+			text = colored(f"Experiment created with id:{content['experimentKey']}", 'green')
+			print(text, "\n")
+			explink = self.__url  + "experiments/" + self.__datasetId + "/" + content['experimentKey'] + "/"
 			data = {"experiment_id":content['id']}
 			#Send training request to server
 			r = requests.post(f"{self.__url}training/", headers = header, data = data )
@@ -685,7 +687,6 @@ class LinkModelDataSet:
 			content = json.loads(body_unicode)
 			print(content['message'])
 			print("\n")
-			explink = self.__url  + "experiments/" + self.__datasetId + "/" + content['experimentKey'] + "/"
 			print(" Link to Experiment is : " + str(explink))
 			print(" Training Plan Information for Experiment is :")
 			self.getTrainingPlan()
