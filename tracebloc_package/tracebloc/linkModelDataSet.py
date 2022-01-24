@@ -674,6 +674,8 @@ class LinkModelDataSet:
 			content = json.loads(body_unicode)
 			print(content['message'])
 			print("\n")
+			explink = self.__url  + "experiments/" + self.__datasetId + "/" + content['experimentKey'] + "/"
+			print(" Link to Experiment is : " + str(explink))
 			print(" Training Plan Information for Experiment is :")
 			self.getTrainingPlan()
 
