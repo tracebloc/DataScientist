@@ -1,18 +1,17 @@
 
 import requests, json, pickle
 from importlib.machinery import SourceFileLoader
+from termcolor import colored
+import os
 
 class Model():
 
     '''
     Make sure model file and weights are in current directory
-    Parameters: modelname, token
+    Parameters: modelname
 
     modelname: model file name eg: vggnet, if file name is vggnet.py
-    token: token recieved from login
 
-    *******
-    Call getNewModelName method on Upload to get uploded model unique name
     '''
 
     def __init__(self,modelname,token):
@@ -25,6 +24,31 @@ class Model():
     def getNewModelId(self):
         # print(self.__recievedModelname)
         return self.__recievedModelname
+
+    def checkFiles(self):
+
+        # load model from current directory
+        try:
+            modelFile = open(f'{self.__modelname}.py','rb')
+        except FileNotFoundError:
+            text = colored('Model upload failed!', 'red')
+            print(text,"\n")
+            print(f"There is no model with the name {self.__modelname} in your folder {os.getcwd()}\n")
+            print(f"Your model should be of a python file: {self.__modelname}.py")
+            return False
+
+        # load model weights from current directory
+        try:
+            weightsFile = open(f'{self.__modelname}_weights.pkl','rb')
+        except FileNotFoundError:
+            text = colored('Model upload failed!', 'red')
+            print(text,"\n")
+            print(f"The model weights file does not meet the convention: expected weights name: ”{self.__modelname}_weights.pkl”. Please check your model weights file name")
+            return False
+
+        return True
+
+
 
     def check(self):
         try:
@@ -42,25 +66,37 @@ class Model():
 
     def upload(self):
 
-        #call check function before calling upload API
-        s = self.check()
+        # check files for model and weights
+        f = self.checkFiles()
+        if f:
 
-        if s:
+            #call check function before calling upload API
+            s = self.check()
 
-            header = {'Authorization' : f"Token {self.__token}"}
-            files = {'upload_file': open(f'{self.__modelname}.py','rb'),
-            'upload_weights': open(f'{self.__modelname}_weights.pkl','rb')}
-            values = {"model_name": self.__modelname}
-            r = requests.post(self.__url, headers = header, files=files, data=values)
-            
-            if r.status_code == 202:
-                body_unicode = r.content.decode('utf-8')
-                content = json.loads(body_unicode)
-                print("Upload successful.")
-                print("\n")
-                return content['model_name']
+            if s:
+                modelFile = open(f'{self.__modelname}.py','rb')
+                weightsFile = open(f'{self.__modelname}_weights.pkl','rb')
+                
+                # upload on the server
+                header = {'Authorization' : f"Token {self.__token}"}
+                files = {'upload_file': modelFile,
+                'upload_weights': weightsFile}
+                values = {"model_name": self.__modelname}
+                r = requests.post(self.__url, headers = header, files=files, data=values)
+                
+                if r.status_code == 202:
+                    body_unicode = r.content.decode('utf-8')
+                    content = json.loads(body_unicode)
+                    text = colored("Upload successful.", "green")
+                    print(text,"\n")
+                    return content['model_name']
+                else:
+                    text = colored('Server: Model upload failed!', 'red')
+                    print(text,"\n")
+                    
+
+
             else:
-                print("Upload failed. \nPlease check naming convention of model and weight files and try again.")
-                print("\n")
-        else:
-            print("Provide correct weights and model")
+                text = colored('Model upload failed!', 'red')
+                print(text,"\n")
+                print("Provide weights compatible with provided model!")
