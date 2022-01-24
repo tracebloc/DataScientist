@@ -1,4 +1,5 @@
 import requests,json
+from termcolor import colored
 
 class LinkModelDataSet:
 
@@ -60,16 +61,26 @@ class LinkModelDataSet:
 		self.__modelType = ""
 		self.__category = ""
 		self.__upperboundTime = 0
+		self.checkmodel()
 
-		header = {'Authorization' : f"Token {self.__token}"}
-		re = requests.post(f"{self.__url}check-model/",headers= header,data={'datasetId':self.__datasetId,'modelName':self.__modelName})
+	def checkmodel(self):
+		header = {'Authorization': f"Token {self.__token}"}
+		re = requests.post(f"{self.__url}check-model/", headers=header,
+						   data={'datasetId': self.__datasetId, 'modelName': self.__modelName})
 		body_unicode = re.content.decode('utf-8')
 		content = json.loads(body_unicode)
-		print(content)
 		if content["status"] == "failed":
-			print("Please ensure that modelid provided have same output clases as in dataset \nand input shape match the below condition:\nFor medical--> (None, 224, 224, 3)\nFor industrial--> (None, 48, 48, 3)")
-		else:
-			print("Model and dataset selected, please set parameters")
+			text = colored("Assignment failed!", 'red')
+			print(text, "\n")
+			print(f"\nDataSet {self.__datasetId} expected parameters :")
+			print(f"\nclasses : {content['datasetClasses']}, shape: {content['datasetShape']}\n")
+			print(f"\n {self.__modelName} parameters :")
+			print(f"\nclasses : {content['outputClass']}, shape: {content['inputShape']}\n")
+			print("\nPlease change model parameters to match expected dataset parameters.")
+		elif content["status"] == "passed":
+			text = colored("Assignment successful!", 'green')
+			print(text, "\n")
+			print("Please set training plan.")
 
 	def category(self,category:str):
 		'''
