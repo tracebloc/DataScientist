@@ -664,17 +664,18 @@ class LinkModelDataSet:
 		re = requests.post(f"{self.__url}experiments/",headers= header,data=self.__getParameters())
 		# print(re.status_code)
 		if re.status_code == 201:
-
-			print("TrainingPlan created")
 			body_unicode = re.content.decode('utf-8')
 			content = json.loads(body_unicode)
-			print(f"with experiment_id:{content['id']}\n")
+			print(f"Experiment created with id:{content['experimentKey']}\n")
 			data = {"experiment_id":content['id']}
 			#Send training request to server
 			r = requests.post(f"{self.__url}training/", headers = header, data = data )
 			body_unicode = r.content.decode('utf-8')
 			content = json.loads(body_unicode)
 			print(content['message'])
+			print("\n")
+			print(" Training Plan Information for Experiment is :")
+			self.getTrainingPlan()
 
 
 	def __getParameters(self):
@@ -740,7 +741,7 @@ class LinkModelDataSet:
 			f"validationSteps: {self.__validationSteps}\n",
 			f"batchSize: {self.__batchSize}\n",
 			f"validation_split': {self.__validation_split}\n",
-			"\n \033[1mHyperParameters\033[0m\n\n",
+			"\n \033[1mHyperparameters\033[0m\n\n",
 			f"optimizer: {self.__optimizer}\n",
 			f"lossFunction: {self.__lossFunction}\n",
 			f"learningRate: {self.__learningRate}\n",
