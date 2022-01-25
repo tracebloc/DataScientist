@@ -18,8 +18,8 @@ class Model():
         self.__modelname = modelname
         self.__token = token
         self.weights = weights
-        self.__url = 'https://xray-backend-develop.azurewebsites.net/upload/'
-        # self.__url = 'http://127.0.0.1:8000/upload/'
+        # self.__url = 'https://xray-backend-develop.azurewebsites.net/upload/'
+        self.__url = 'http://127.0.0.1:8000/upload/'
         self.__recievedModelname = self.upload()
 
     def getNewModelId(self):
@@ -71,17 +71,19 @@ class Model():
     def upload(self):
         m = self.checkModel()
         if m:
-            modelFile = open(f'{self.__modelname}.py','rb')
-            weightsFile = open(f'{self.__modelname}_weights.pkl','rb')
-            
+            if self.weights == True:
+                modelFile = open(f'{self.__modelname}.py','rb')
+                weightsFile = open(f'{self.__modelname}_weights.pkl','rb')
+                files = {'upload_file': modelFile,
+                'upload_weights': weightsFile}
+                values = {"model_name": self.__modelname,"setWeights": True}
+            else:
+                modelFile = open(f'{self.__modelname}.py','rb')
+                files = {'upload_file': modelFile}
+                values = {"model_name": self.__modelname,"setWeights": False}
             # upload on the server
             header = {'Authorization' : f"Token {self.__token}"}
-            files = {'upload_file': modelFile,
-            'upload_weights': weightsFile}
-            values = {"model_name": self.__modelname}
             r = requests.post(self.__url, headers = header, files=files, data=values)
-            modelFile.close()
-            weightsFile.close()
             if r.status_code == 202:
                 body_unicode = r.content.decode('utf-8')
                 content = json.loads(body_unicode)
