@@ -41,19 +41,20 @@ class User():
             print("\n")
             return ""
 
-    def uploadModel(self,modelname:str):
+    def uploadModel(self,modelname:str,weights=False):
 
         '''
         Make sure model file and weights are in current directory
-        Parameters: modelname, token
+        Parameters: modelname
 
         modelname: model file name eg: vggnet, if file name is vggnet.py
+        weights: upload pre trained weights if set True. Default: False
 
         *******
         return: model unique Id
         '''
 
-        model = Model(modelname,self.__token)
+        model = Model(modelname,self.__token,weights)
         modelId = model.getNewModelId()
         return modelId
 
