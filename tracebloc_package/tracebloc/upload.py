@@ -18,8 +18,8 @@ class Model():
         self.__modelname = modelname
         self.__token = token
         self.weights = weights
-        # self.__url = 'https://xray-backend-develop.azurewebsites.net/upload/'
-        self.__url = 'http://127.0.0.1:8000/upload/'
+        self.__url = 'https://xray-backend-develop.azurewebsites.net/upload/'
+        # self.__url = 'http://127.0.0.1:8000/upload/'
         self.__recievedModelname = self.upload()
 
     def getNewModelId(self):

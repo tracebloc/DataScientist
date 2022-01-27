@@ -24,6 +24,7 @@ class User():
         self.__username = input("Enter Username ")
         self.__password = getpass.getpass("Enter Password ")
         self.__token = self.login()
+        self.__weights = False
 
     def login(self):
         '''Function to get Token for username provided'''
@@ -53,7 +54,7 @@ class User():
         *******
         return: model unique Id
         '''
-
+        self.__weights = weights
         model = Model(modelname,self.__token,weights)
         modelId = model.getNewModelId()
         return modelId
@@ -68,5 +69,5 @@ class User():
         return: training plan object
         """
 
-        trainingObject = LinkModelDataSet(modelId,datasetId,self.__token)
+        trainingObject = LinkModelDataSet(modelId,datasetId,self.__token,self.__weights)
         return trainingObject

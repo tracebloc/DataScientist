@@ -10,7 +10,7 @@ class LinkModelDataSet:
 		methods:get_parameters, get_trainingplan
 		"""
 
-	def __init__(self,modelId,datasetId,token):
+	def __init__(self,modelId,datasetId,token,weights):
 
 		self.__url = 'https://xray-backend-develop.azurewebsites.net/'
 		# self.__url = 'http://127.0.0.1:8000/'
@@ -61,6 +61,7 @@ class LinkModelDataSet:
 		self.__modelType = ""
 		self.__category = ""
 		self.__upperboundTime = 0
+		self.__weights = weights
 		self.checkmodel()
 
 	def checkmodel(self):
@@ -669,7 +670,7 @@ class LinkModelDataSet:
 	def create(self):
 		#set callbacks
 		self.__setCallbacks()
-
+		
 		#Create Experiment
 		header = {'Authorization' : f"Token {self.__token}"}
 		re = requests.post(f"{self.__url}experiments/",headers= header,data=self.__getParameters())
@@ -734,7 +735,8 @@ class LinkModelDataSet:
 					 'modelType': self.__modelType,
 					 'category': self.__category,
 					 'upperboundTime': self.__upperboundTime,
-					 'callbacks': self.__callbacks
+					 'callbacks': self.__callbacks,
+					 'pre_trained_weights': self.__weights
 					 }
 
 		return parameters
