@@ -13,7 +13,7 @@ source ~/.bashrc
 ```
 2. Create an environment and activate it
 ```shell
-conda create -n dsenvironemnt anaconda 
+conda create -n dsenvironemnt python=3.8 anaconda 
 
 conda activate dsenvironemnt 
 ```
@@ -21,6 +21,11 @@ conda activate dsenvironemnt
 ```shell
 pip install -r requirement.txt
 ```
+4. Install tensorflow
+```shell
+pip install tensorflow==2.6.0
+```
+In case of mac m1 follow this link to install tensorflow: https://caffeinedev.medium.com/how-to-install-tensorflow-on-m1-mac-8e9b91d93706
 4. Install Jupyter Notebook
 ```shell
 conda install jupyter notebook
