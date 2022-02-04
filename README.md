@@ -36,6 +36,10 @@ Enter following commands
 conda install -c apple tensorflow-deps
 pip install tensorflow-macos
 pip install tensorflow-metal
+pip uninstall -y numpy
+pip uninstall -y setuptools
+pip install numpy
+pip install setuptools
 ```
 ###4. Install Jupyter Notebook
 ```shell
@@ -43,18 +47,11 @@ conda install jupyter notebook
 
 pip install jupyter
 ```
-###5. Run below mentioned commands to get updated packages
-```shell
-pip uninstall -y numpy
-pip uninstall -y setuptools
-pip install setuptools
-pip install numpy
-```
-###6. Move to Directory
+###5. Move to Directory
 ```shell
 cd federated-xray-datascientist
 ```
-###7. Start Jupyter Notebook
+###6. Start Jupyter Notebook
 ```shell
 jupyter notebook
 ```
