@@ -21,9 +21,11 @@ conda activate dsenvironemnt
 ```shell
 pip install -r requirement.txt
 ```
-###4. Install tensorflow
+###4. Install tensorflow and keras
 ```shell
 pip install tensorflow==2.6.0
+pip install keras==2.6.0
+
 ```
 ####In case of mac m1 machine
 
