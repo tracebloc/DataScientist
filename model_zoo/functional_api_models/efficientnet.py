@@ -3,6 +3,9 @@ from tensorflow.keras import layers
 from tensorflow.keras.utils import plot_model
 import math
 
+main_method = 'MyModel'
+input_shape = 'input_shape'
+output_classes = 'classes'
 
 def mbconv_block(input, filters_in, filters_out, kernel_size=3, strides=1, exp_ratio=6, se_ratio=0.25):
 	"""

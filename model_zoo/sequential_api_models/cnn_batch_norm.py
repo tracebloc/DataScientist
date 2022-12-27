@@ -1,6 +1,11 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
+
+main_method = 'MyModel'
+input_shape = 'input_shape'
+output_classes = 'classes'
+
 # define lenet model
 
 def MyModel(input_shape=(224,224,3),classes=3):

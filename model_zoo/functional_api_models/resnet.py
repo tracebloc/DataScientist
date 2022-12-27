@@ -2,6 +2,11 @@ import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras.utils import plot_model
 
+
+main_method = 'MyModel'
+input_shape = 'input_shape'
+output_classes = 'classes'
+
 # Identity Block
 def identity_block(input_tensor, filters, strides=1):
 	"""

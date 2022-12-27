@@ -1,6 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras import layers, utils
 
+main_method = 'MyModel'
+input_shape = 'input_shape'
+output_classes = 'classes'
+
 def MyModel(input_shape=(224,224,3),classes=3):
 
 	model = tf.keras.models.Sequential([

@@ -2,6 +2,9 @@ import tensorflow as tf
 from tensorflow.keras import layers, utils
 
 # Dense Block
+main_method = 'MyModel'
+input_shape = 'input_shape'
+output_classes = 'classes'
 
 def dense_block(input_tensor, k, block_reps):
 	"""
