@@ -3,6 +3,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.utils import plot_model
 import math
 
+framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'classes'
