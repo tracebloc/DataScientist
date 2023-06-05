@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
-
+framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'classes'

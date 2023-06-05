@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras.utils import plot_model
 
-
+framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'classes'
