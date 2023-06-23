@@ -8,7 +8,7 @@ output_classes = 'classes'
 
 # define lenet model
 
-def MyModel(input_shape=(224,224,3),classes=3):
+def MyModel(input_shape=(224,224,3),classes=2):
 
     model = models.Sequential()
     # layer conv 1
