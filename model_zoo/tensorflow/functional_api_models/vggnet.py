@@ -5,6 +5,7 @@ framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'classes'
+model_type = ''
 
 def MyModel(input_shape=(224,224,3),classes=3):
 	## VGG-16

@@ -4,6 +4,7 @@ from tensorflow.keras import layers, utils
 # Dense Block
 framework = 'tensorflow'
 main_method = 'MyModel'
+model_type = ''
 input_shape = 'input_shape'
 output_classes = 'classes'
 

@@ -10,6 +10,7 @@ framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'output_classes'
+model_type = ''
 
 
 def MyModel(input_shape=(224, 224, 3), output_classes=3):
