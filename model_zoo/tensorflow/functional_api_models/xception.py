@@ -5,6 +5,7 @@ framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'classes'
+model_type = ''
 
 # entry flow block
 

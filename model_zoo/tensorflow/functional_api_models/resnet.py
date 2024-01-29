@@ -6,6 +6,7 @@ framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'classes'
+model_type = ''
 
 # Identity Block
 def identity_block(input_tensor, filters, strides=1):

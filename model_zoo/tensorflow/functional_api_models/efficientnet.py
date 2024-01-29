@@ -7,6 +7,7 @@ framework = 'tensorflow'
 main_method = 'MyModel'
 input_shape = 'input_shape'
 output_classes = 'classes'
+model_type = ''
 
 def mbconv_block(input, filters_in, filters_out, kernel_size=3, strides=1, exp_ratio=6, se_ratio=0.25):
 	"""
