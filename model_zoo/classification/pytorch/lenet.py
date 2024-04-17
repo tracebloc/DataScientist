@@ -3,8 +3,10 @@ import torch.nn as nn
 
 framework = "pytorch"
 main_class = "MyModel"
+model_type = ""
 image_size = 224
 batch_size = 16
+output_classes = 3
 
 
 class MyModel(nn.Module):
@@ -26,7 +28,7 @@ class MyModel(nn.Module):
         self.relu = nn.ReLU()
         self.fc1 = nn.Linear(120, 84)
         self.relu1 = nn.ReLU()
-        self.fc2 = nn.Linear(84, 3)
+        self.fc2 = nn.Linear(84, output_classes)
 
     def forward(self, x):
         out = self.layer1(x)

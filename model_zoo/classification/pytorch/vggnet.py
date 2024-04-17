@@ -3,8 +3,10 @@ import torch.nn as nn
 
 framework = "pytorch"
 main_class = "MyModel"
+model_type = ""
 image_size = 224
 batch_size = 16
+output_classes = 3
 
 
 class MyModel(nn.Module):
@@ -84,7 +86,7 @@ class MyModel(nn.Module):
             nn.Dropout(0.5), nn.Linear(7 * 7 * 512, 4096), nn.ReLU()
         )
         self.fc1 = nn.Sequential(nn.Dropout(0.5), nn.Linear(4096, 4096), nn.ReLU())
-        self.fc2 = nn.Sequential(nn.Linear(4096, 3))
+        self.fc2 = nn.Sequential(nn.Linear(4096, output_classes))
 
     def forward(self, x):
         out = self.layer1(x)
