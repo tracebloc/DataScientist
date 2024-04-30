@@ -4,13 +4,14 @@ from tensorflow.keras import layers, models
 framework = "tensorflow"
 main_method = "MyModel"
 input_shape = "input_shape"
-output_classes = "classes"
+output_classes = 2
 model_type = ""
+category = "image_classification"
 
 # define lenet model
 
 
-def MyModel(input_shape=(224, 224, 3), classes=3):
+def MyModel(input_shape=(224, 224, 3), classes=output_classes):
     model = models.Sequential()
     # layer conv 1
     model.add(layers.Conv2D(32, 3, activation="relu", input_shape=input_shape))

@@ -6,6 +6,7 @@ framework = "pytorch"
 main_class = "VisionTransformer"
 image_size = 224
 batch_size = 16
+category = "image_classification"
 
 
 class VisionTransformer(nn.Module):
