@@ -1,6 +1,5 @@
 import torch.nn as nn
 from torchvision.models.detection import keypointrcnn_resnet50_fpn as kprcnn
-from torchvision.models.detection.rpn import AnchorGenerator
 
 framework = "pytorch"
 model_type = "rcnn"
