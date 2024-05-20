@@ -3,7 +3,6 @@ import torch.nn as nn
 
 framework = "pytorch"
 main_class = "MyModel"
-model_type = ""
 image_size = 224
 batch_size = 16
 output_classes = 3
