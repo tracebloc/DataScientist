@@ -4,10 +4,10 @@ import torch.nn.functional as F
 
 framework = "pytorch"
 main_class = "Net"
-model_type = ""
 image_size = 224
 batch_size = 16
 output_classes = 3
+category = "image_classification"
 
 
 class Net(nn.Module):
