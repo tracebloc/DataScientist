@@ -9,11 +9,12 @@ import tensorflow as tf
 framework = "tensorflow"
 main_method = "MyModel"
 input_shape = "input_shape"
-output_classes = "output_classes"
+output_classes = 3
 model_type = ""
+category = "image_classification"
 
 
-def MyModel(input_shape=(224, 224, 3), output_classes=3):
+def MyModel(input_shape=(224, 224, 3), output_classes=output_classes):
     vit_model = vit.vit_b16(
         image_size=input_shape[0],
         activation="softmax",
