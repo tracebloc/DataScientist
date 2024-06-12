@@ -12,6 +12,7 @@ batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
 
+
 class ResNetSPPE(nn.Module):
     def __init__(self, num_keypoints=4, input_channels=3):
         super(ResNetSPPE, self).__init__()
@@ -22,7 +23,9 @@ class ResNetSPPE(nn.Module):
 
         # Modify the first convolution layer to accommodate different input channels
         if input_channels != 3:
-            resnet.conv1 = nn.Conv2d(input_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
+            resnet.conv1 = nn.Conv2d(
+                input_channels, 64, kernel_size=7, stride=2, padding=3, bias=False
+            )
 
         # Extract all layers except the fully connected layer
         self.backbone = nn.Sequential(*list(resnet.children())[:-2])

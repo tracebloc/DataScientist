@@ -11,7 +11,6 @@ model_type = ""
 category = "image_classification"
 
 
-
 def mbconv_block(
     input, filters_in, filters_out, kernel_size=3, strides=1, exp_ratio=6, se_ratio=0.25
 ):

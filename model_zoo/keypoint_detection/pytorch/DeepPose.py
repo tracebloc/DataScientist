@@ -13,7 +13,7 @@ category = "keypoint_detection"
 
 
 class DeepPoseModel(nn.Module):
-    def __init__(self, num_keypoints: int=4, image_shape=64):
+    def __init__(self, num_keypoints: int = 4, image_shape=64):
         super(DeepPoseModel, self).__init__()
         self.num_keypoints = num_keypoints
 

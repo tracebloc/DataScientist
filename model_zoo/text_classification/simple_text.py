@@ -10,6 +10,7 @@ input_shape = 512
 batch_size = 16
 output_classes = 2
 
+
 class SimpleTextClassifier(nn.Module):
     def __init__(self, embed_dim=512, num_classes=2):
         super(SimpleTextClassifier, self).__init__()

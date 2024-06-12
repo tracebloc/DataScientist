@@ -18,21 +18,21 @@ class VGGBackbone(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(64, 64, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2)
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.conv2 = nn.Sequential(
             nn.Conv2d(64, 128, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
             nn.Conv2d(128, 128, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2)
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.conv3 = nn.Sequential(
             nn.Conv2d(128, 256, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
             nn.Conv2d(256, 256, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2)
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
 
     def forward(self, x):
@@ -54,7 +54,7 @@ class StageModule(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(128, 128, kernel_size=7, padding=3),
             nn.ReLU(inplace=True),
-            nn.Conv2d(128, num_keypoints * 3, kernel_size=1)
+            nn.Conv2d(128, num_keypoints * 3, kernel_size=1),
         )
 
     def forward(self, x):
@@ -62,7 +62,7 @@ class StageModule(nn.Module):
 
 
 class OpenPoseKeypointDetector(nn.Module):
-    def __init__(self, num_keypoints: int=4, stages: int = 3):
+    def __init__(self, num_keypoints: int = 4, stages: int = 3):
         super(OpenPoseKeypointDetector, self).__init__()
         # Backbone
         self.backbone = VGGBackbone()
@@ -72,7 +72,10 @@ class OpenPoseKeypointDetector(nn.Module):
 
         # Additional stage modules for refinement
         self.stages = nn.ModuleList(
-            [StageModule(256 + num_keypoints * 3, num_keypoints) for _ in range(stages - 1)]
+            [
+                StageModule(256 + num_keypoints * 3, num_keypoints)
+                for _ in range(stages - 1)
+            ]
         )
 
     def forward(self, x):
@@ -89,7 +92,8 @@ class OpenPoseKeypointDetector(nn.Module):
 
         # Pool spatially to produce the final (batch_size, num_keypoints, 3) tensor
         batch_size, _, height, width = stage_output.shape
-        output = nn.functional.adaptive_avg_pool2d(stage_output, (1, 1)).view(batch_size, -1, 3)
+        output = nn.functional.adaptive_avg_pool2d(stage_output, (1, 1)).view(
+            batch_size, -1, 3
+        )
 
         return output
-

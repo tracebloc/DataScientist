@@ -22,7 +22,7 @@ class DSNTLayer(nn.Module):
         grid_y, grid_x = torch.meshgrid(
             torch.linspace(-1, 1, heatmap.size(-2)),
             torch.linspace(-1, 1, heatmap.size(-1)),
-            indexing="ij"
+            indexing="ij",
         )
         grid_x = grid_x.to(heatmap.device)
         grid_y = grid_y.to(heatmap.device)

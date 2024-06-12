@@ -29,7 +29,9 @@ class FasterRCNNSPPE(nn.Module):
         self.global_avg_pool = nn.AdaptiveAvgPool2d((1, 1))
 
         # Adjust the feature map size to the input of the final fully connected layer
-        num_features = 256  # Feature size; confirm actual dimensions from the backbone output
+        num_features = (
+            256  # Feature size; confirm actual dimensions from the backbone output
+        )
         self.fc = nn.Linear(num_features, num_keypoints * 3)
 
     def forward(self, x):

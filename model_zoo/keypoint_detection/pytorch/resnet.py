@@ -19,17 +19,25 @@ class SimpleBaseline(nn.Module):
         super(SimpleBaseline, self).__init__()
         # Load a pre-trained ResNet backbone
         backbone = models.resnet50(pretrained=True)
-        self.backbone = nn.Sequential(*(list(backbone.children())[:-2]))  # Remove the classification layers
+        self.backbone = nn.Sequential(
+            *(list(backbone.children())[:-2])
+        )  # Remove the classification layers
 
         # Deconvolutional layers for upsampling
         self.deconv_layers = nn.Sequential(
-            nn.ConvTranspose2d(2048, 256, kernel_size=4, stride=2, padding=1, output_padding=0),
+            nn.ConvTranspose2d(
+                2048, 256, kernel_size=4, stride=2, padding=1, output_padding=0
+            ),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
-            nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=1, output_padding=0),
+            nn.ConvTranspose2d(
+                256, 256, kernel_size=4, stride=2, padding=1, output_padding=0
+            ),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
-            nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=1, output_padding=0),
+            nn.ConvTranspose2d(
+                256, 256, kernel_size=4, stride=2, padding=1, output_padding=0
+            ),
             nn.BatchNorm2d(256),
             nn.ReLU(True),
         )
@@ -54,4 +62,3 @@ class SimpleBaseline(nn.Module):
             keypoints[:, i, 2] = maxvals  # Visibility
 
         return keypoints
-

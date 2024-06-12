@@ -10,7 +10,6 @@ output_classes = 2
 category = "image_classification"
 
 
-
 def dense_block(input_tensor, k, block_reps):
     """
     tensor: input tensor from the previous layers
