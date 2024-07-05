@@ -8,7 +8,7 @@ image_size = 32
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 4
 
 class VGGBackbone(nn.Module):
     def __init__(self):
@@ -62,7 +62,7 @@ class StageModule(nn.Module):
 
 
 class OpenPoseKeypointDetector(nn.Module):
-    def __init__(self, num_keypoints: int = 4, stages: int = 3):
+    def __init__(self, num_keypoints: int = num_keypoints, stages: int = 3):
         super(OpenPoseKeypointDetector, self).__init__()
         # Backbone
         self.backbone = VGGBackbone()

@@ -10,10 +10,10 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 4
 
 class DeepPoseModel(nn.Module):
-    def __init__(self, num_keypoints: int = 4, image_shape=64):
+    def __init__(self, num_keypoints: int = num_keypoints, image_shape=64):
         super(DeepPoseModel, self).__init__()
         self.num_keypoints = num_keypoints
 

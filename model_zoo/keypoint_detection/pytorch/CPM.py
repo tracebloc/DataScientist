@@ -4,14 +4,11 @@ import torch.nn as nn
 framework = "pytorch"
 model_type = ""
 main_class = "CPM"
-image_size = 32
+image_size = 512
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
-
-import torch
-import torch.nn as nn
+num_keypoints = 4
 
 
 class CPMStage(nn.Module):
@@ -43,7 +40,7 @@ class CPMStage(nn.Module):
 
 
 class CPM(nn.Module):
-    def __init__(self, in_channels=3, num_keypoints=4, num_stages=6):
+    def __init__(self, in_channels=3, num_keypoints=num_keypoints, num_stages=6):
         super(CPM, self).__init__()
         self.in_channels = in_channels
         self.num_keypoints = num_keypoints

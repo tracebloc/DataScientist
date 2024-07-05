@@ -11,7 +11,7 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 4
 
 class DSNTLayer(nn.Module):
     def __init__(self):
@@ -33,7 +33,7 @@ class DSNTLayer(nn.Module):
 
 
 class KeypointDetectionModel(nn.Module):
-    def __init__(self, num_keypoints=4):
+    def __init__(self, num_keypoints=num_keypoints):
         super(KeypointDetectionModel, self).__init__()
         self.num_keypoints = num_keypoints
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1)

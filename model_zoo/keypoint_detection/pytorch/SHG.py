@@ -10,7 +10,7 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 4
 
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -77,7 +77,7 @@ class Hourglass(nn.Module):
 
 
 class StackHourglass(nn.Module):
-    def __init__(self, num_stacks=8, stack_channels=256, num_keypoints=4):
+    def __init__(self, num_stacks=8, stack_channels=256, num_keypoints=num_keypoints):
         super(StackHourglass, self).__init__()
         self.num_stacks = num_stacks
         self.num_channels = stack_channels

@@ -8,10 +8,10 @@ image_size = 448
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 4
 
 class MyModel(nn.Module):
-    def __init__(self, num_keypoints=4):
+    def __init__(self, num_keypoints=num_keypoints):
         super(MyModel, self).__init__()
 
         self.model = kprcnn(

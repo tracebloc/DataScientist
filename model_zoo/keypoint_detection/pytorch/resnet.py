@@ -12,10 +12,10 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 4
 
 class SimpleBaseline(nn.Module):
-    def __init__(self, num_keypoints=4):
+    def __init__(self, num_keypoints=num_keypoints):
         super(SimpleBaseline, self).__init__()
         # Load a pre-trained ResNet backbone
         backbone = models.resnet50(pretrained=True)

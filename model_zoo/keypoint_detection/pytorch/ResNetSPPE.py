@@ -11,10 +11,10 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 4
 
 class ResNetSPPE(nn.Module):
-    def __init__(self, num_keypoints=4, input_channels=3):
+    def __init__(self, num_keypoints=num_keypoints, input_channels=3):
         super(ResNetSPPE, self).__init__()
         self.num_keypoints = num_keypoints
 

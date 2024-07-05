@@ -12,6 +12,7 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
+num_keypoints = 4
 
 
 class KeypointHead(nn.Module):
@@ -30,7 +31,7 @@ class KeypointHead(nn.Module):
 
 
 class CascadedPyramidNetwork(nn.Module):
-    def __init__(self, num_keypoints=4):
+    def __init__(self, num_keypoints=num_keypoints):
         super(CascadedPyramidNetwork, self).__init__()
 
         # Load a pretrained ResNet backbone
