@@ -4,11 +4,11 @@ import torch.nn as nn
 framework = "pytorch"
 model_type = ""
 main_class = "CPM"
-image_size = 512
-batch_size = 16
+image_size = 256
+batch_size = 8
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 4
+num_keypoints = 16
 
 
 class CPMStage(nn.Module):
