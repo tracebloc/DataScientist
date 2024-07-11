@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from torchvision.models.detection import keypointrcnn_resnet50_fpn as kprcnn
 
@@ -13,7 +14,8 @@ num_keypoints = 16
 class MyModel(nn.Module):
     def __init__(self, num_keypoints=num_keypoints):
         super(MyModel, self).__init__()
-
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.to(self.device)
         self.model = kprcnn(
             pretrained=False,
             pretrained_backbone=True,
