@@ -9,7 +9,7 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 4
+num_keypoints = 16
 
 class HRNetKeypointDetection(nn.Module):
     def __init__(self, num_keypoints: int = num_keypoints, input_channels: int = 3):

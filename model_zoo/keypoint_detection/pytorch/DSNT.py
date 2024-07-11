@@ -12,9 +12,6 @@ batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
 num_keypoints = 16
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 
 
 class KeypointDetectionModel(nn.Module):

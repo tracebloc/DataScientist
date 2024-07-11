@@ -8,7 +8,7 @@ image_size = 32
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 4
+num_keypoints = 16
 
 class VGGBackbone(nn.Module):
     def __init__(self):
