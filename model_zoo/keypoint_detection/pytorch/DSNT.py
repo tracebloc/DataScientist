@@ -14,7 +14,7 @@ category = "keypoint_detection"
 num_keypoints = 16
 
 class KeypointDetectionModel(nn.Module):
-    def __init__(self, num_keypoints=16):
+    def __init__(self, num_keypoints=num_keypoints):
         super(KeypointDetectionModel, self).__init__()
         self.num_keypoints = num_keypoints
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1)
@@ -23,7 +23,7 @@ class KeypointDetectionModel(nn.Module):
         self.conv4 = nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1)
 
         # Output layer for coordinates
-        self.coords_fc = nn.Linear(self.determine_flattened_size(), num_keypoints * 2)
+        self.coords_fc = nn.Linear(self.determine_flattened_size(), num_keypoints * 3)
 
     def determine_flattened_size(self):
         # This should be set appropriately based on the output size of conv4
@@ -41,6 +41,6 @@ class KeypointDetectionModel(nn.Module):
 
         x_flat = torch.flatten(x, start_dim=1)
         coords = self.coords_fc(x_flat)
-        coords = coords.view(-1, self.num_keypoints, 2)  # Reshape to [batch_size, num_keypoints, 2]
+        coords = coords.view(-1, self.num_keypoints, 3)  # Reshape to [batch_size, num_keypoints, 2]
 
         return coords
