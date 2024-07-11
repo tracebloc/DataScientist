@@ -5,8 +5,8 @@ from torchvision.models.detection import keypointrcnn_resnet50_fpn as kprcnn
 framework = "pytorch"
 model_type = "rcnn"
 main_class = "MyModel"
-image_size = 448
-batch_size = 16
+image_size = 64
+batch_size = 8
 output_classes = 1
 category = "keypoint_detection"
 num_keypoints = 16
