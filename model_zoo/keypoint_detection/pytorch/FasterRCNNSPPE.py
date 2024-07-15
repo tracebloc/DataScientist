@@ -11,10 +11,10 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 16
 
 class FasterRCNNSPPE(nn.Module):
-    def __init__(self, num_keypoints=4):
+    def __init__(self, num_keypoints=num_keypoints):
         super(FasterRCNNSPPE, self).__init__()
         self.num_keypoints = num_keypoints
 
@@ -29,7 +29,9 @@ class FasterRCNNSPPE(nn.Module):
         self.global_avg_pool = nn.AdaptiveAvgPool2d((1, 1))
 
         # Adjust the feature map size to the input of the final fully connected layer
-        num_features = 256  # Feature size; confirm actual dimensions from the backbone output
+        num_features = (
+            256  # Feature size; confirm actual dimensions from the backbone output
+        )
         self.fc = nn.Linear(num_features, num_keypoints * 3)
 
     def forward(self, x):

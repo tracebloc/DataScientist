@@ -10,10 +10,10 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 16
 
 class DeepPoseModel(nn.Module):
-    def __init__(self, num_keypoints: int=4, image_shape=64):
+    def __init__(self, num_keypoints: int = num_keypoints, image_shape=64):
         super(DeepPoseModel, self).__init__()
         self.num_keypoints = num_keypoints
 
@@ -24,19 +24,20 @@ class DeepPoseModel(nn.Module):
         self.conv4 = nn.Conv2d(256, 512, kernel_size=3, stride=2, padding=1)
         self.conv5 = nn.Conv2d(512, 1024, kernel_size=3, stride=2, padding=1)
 
-        # Define fully connected layers for keypoint prediction
-        self.fc1 = nn.Linear(1024 * (image_shape // 32) * (image_shape // 32), 1024)
+        # Adaptive pooling layer to fix the output size
+        self.adaptive_pool = nn.AdaptiveAvgPool2d((1, 1))  # Outputs a fixed 1x1 feature map per channel
+
+        # Flatten size adjusted for adaptive pooling
+        self.fc1 = nn.Linear(1024, 1024)
         self.fc2 = nn.Linear(1024, num_keypoints * 3)
 
     def forward(self, x):
-        # Forward pass through convolutional layers
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = F.relu(self.conv4(x))
         x = F.relu(self.conv5(x))
-
-        # Flatten the feature map
+        x = self.adaptive_pool(x)
         x = torch.flatten(x, start_dim=1)
 
         # Fully connected layers for keypoint prediction

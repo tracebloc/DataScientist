@@ -6,11 +6,11 @@ subprocess.call(["pip", "install", "tensorflow_addons"])
 from vit_keras import vit
 import tensorflow as tf
 
-framework = "tensorflow"
+ramework = "tensorflow"
 main_method = "MyModel"
-input_shape = "input_shape"
+input_shape = 224
+batch_size = 16
 output_classes = 3
-model_type = ""
 category = "image_classification"
 
 

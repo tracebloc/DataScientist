@@ -4,9 +4,9 @@ from tensorflow.keras.utils import plot_model
 
 framework = "tensorflow"
 main_method = "MyModel"
-input_shape = "input_shape"
-output_classes = 2
-model_type = ""
+input_shape = 224
+batch_size = 16
+output_classes = 3
 category = "image_classification"
 
 

@@ -8,14 +8,15 @@ main_class = "VisionTransformer"
 image_size = 224
 batch_size = 16
 category = "image_classification"
+output_classes = 3
 
 
 class VisionTransformer(nn.Module):
-    def __init__(self, num_labels=3):
+    def __init__(self):
         super().__init__()
         # Initialize the model with a specified number of output labels for classification
         config = ViTConfig.from_pretrained(
-            "google/vit-base-patch16-224", num_labels=num_labels
+            "google/vit-base-patch16-224", num_labels=output_classes
         )
         self.vit = ViTForImageClassification.from_pretrained(
             "google/vit-base-patch16-224", config=config, ignore_mismatched_sizes=True

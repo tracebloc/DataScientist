@@ -12,6 +12,8 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
+num_keypoints = 16
+
 
 class KeypointHead(nn.Module):
     def __init__(self, in_channels, num_keypoints):
@@ -29,7 +31,7 @@ class KeypointHead(nn.Module):
 
 
 class CascadedPyramidNetwork(nn.Module):
-    def __init__(self, num_keypoints=4):
+    def __init__(self, num_keypoints=num_keypoints):
         super(CascadedPyramidNetwork, self).__init__()
 
         # Load a pretrained ResNet backbone
@@ -71,7 +73,7 @@ class CascadedPyramidNetwork(nn.Module):
 
         # Aggregate features using the FPN
         fpn_output = self.fpn(features)
-        fpn_out = fpn_output['c4']
+        fpn_out = fpn_output["c4"]
 
         # Apply the keypoint detection head
         keypoint_predictions = self.keypoint_head(fpn_out)
@@ -81,4 +83,3 @@ class CascadedPyramidNetwork(nn.Module):
         num_keypoints = keypoint_predictions.shape[1] // 3
         keypoint_predictions = keypoint_predictions.view(batch_size, num_keypoints, 3)
         return keypoint_predictions
-

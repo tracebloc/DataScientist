@@ -10,24 +10,33 @@ image_size = 64
 batch_size = 16
 output_classes = 1
 category = "keypoint_detection"
-
+num_keypoints = 16
 
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(ResidualBlock, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(
+            in_channels, out_channels, kernel_size=3, stride=1, padding=1
+        )
         self.bn1 = nn.BatchNorm2d(out_channels)
         self.relu = nn.ReLU(inplace=True)
-        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(
+            out_channels, out_channels, kernel_size=3, stride=1, padding=1
+        )
         self.bn2 = nn.BatchNorm2d(out_channels)
 
-        self.skip = nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1) if in_channels != out_channels else nn.Identity()
+        self.skip = (
+            nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1)
+            if in_channels != out_channels
+            else nn.Identity()
+        )
 
     def forward(self, x):
         skip = self.skip(x)
         x = self.relu(self.bn1(self.conv1(x)))
         x = self.bn2(self.conv2(x))
         return self.relu(x + skip)
+
 
 class Hourglass(nn.Module):
     def __init__(self, depth, num_channels):
@@ -57,15 +66,18 @@ class Hourglass(nn.Module):
         x = self.middle(x)
 
         for up, skip in zip(self.upsample_layers, reversed(skip_connections)):
-            x = nn.functional.interpolate(x, scale_factor=2, mode='nearest')
+            x = nn.functional.interpolate(x, scale_factor=2, mode="nearest")
             if x.size(2) != skip.size(2) or x.size(3) != skip.size(3):
-                x = nn.functional.pad(x, (0, skip.size(3) - x.size(3), 0, skip.size(2) - x.size(2)))
+                x = nn.functional.pad(
+                    x, (0, skip.size(3) - x.size(3), 0, skip.size(2) - x.size(2))
+                )
             x = up(x) + skip
 
         return x
 
+
 class StackHourglass(nn.Module):
-    def __init__(self, num_stacks=8, stack_channels=256, num_keypoints=4):
+    def __init__(self, num_stacks=8, stack_channels=256, num_keypoints=num_keypoints):
         super(StackHourglass, self).__init__()
         self.num_stacks = num_stacks
         self.num_channels = stack_channels
@@ -76,17 +88,22 @@ class StackHourglass(nn.Module):
             nn.BatchNorm2d(stack_channels),
             nn.ReLU(inplace=True),
             ResidualBlock(stack_channels, stack_channels),
-            nn.MaxPool2d(2, stride=2)
+            nn.MaxPool2d(2, stride=2),
         )
 
-        self.hourglasses = nn.ModuleList([Hourglass(4, stack_channels) for _ in range(num_stacks)])
-        self.output_layers = nn.ModuleList([
-            nn.Sequential(
-                nn.AdaptiveAvgPool2d((1, 1)),
-                nn.Flatten(),
-                nn.Linear(stack_channels, num_keypoints * 3)
-            ) for _ in range(num_stacks)
-        ])
+        self.hourglasses = nn.ModuleList(
+            [Hourglass(4, stack_channels) for _ in range(num_stacks)]
+        )
+        self.output_layers = nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.AdaptiveAvgPool2d((1, 1)),
+                    nn.Flatten(),
+                    nn.Linear(stack_channels, num_keypoints * 3),
+                )
+                for _ in range(num_stacks)
+            ]
+        )
 
     def forward(self, x):
         x = self.pre_layers(x)
@@ -102,5 +119,4 @@ class StackHourglass(nn.Module):
 
             outputs.append(out)
 
-        return outputs[-1] # return last stack result
-
+        return outputs[-1]  # return last stack result
