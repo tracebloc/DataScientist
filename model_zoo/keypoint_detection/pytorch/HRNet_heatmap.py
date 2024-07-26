@@ -37,7 +37,7 @@ class HRNetKeypointDetection(nn.Module):
         self.heatmap_conv = nn.Conv2d(512, num_keypoints, kernel_size=1, stride=1, padding=0)
 
         # Upsample layer to match the input image size
-        self.upsample = nn.Upsample(scale_factor=image_size // 16, mode='bilinear', align_corners=False)
+        self.upsample = nn.Upsample(size=(image_size, image_size), mode='bilinear', align_corners=False)
 
     def forward(self, x: torch.Tensor):
         # Input shape: (batch_size, input_channels, height, width)
