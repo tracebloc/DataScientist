@@ -7,7 +7,7 @@ model_type = ""
 main_class = "StackHourglass"
 # for this model image_size minimum value should be 64
 image_size = 64
-batch_size = 16
+batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
 num_keypoints = 16
