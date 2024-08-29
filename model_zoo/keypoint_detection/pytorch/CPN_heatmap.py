@@ -6,7 +6,7 @@ from torchvision.ops import FeaturePyramidNetwork
 
 # Configuration
 framework = "pytorch"
-model_type = ""
+model_type = "heatmap"
 main_class = "CascadedPyramidNetwork"
 image_size = 64
 batch_size = 128
@@ -15,20 +15,17 @@ category = "keypoint_detection"
 num_keypoints = 16
 
 
+
 class KeypointHead(nn.Module):
     def __init__(self, in_channels, num_keypoints):
         super(KeypointHead, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, 256, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(256, num_keypoints * 3, kernel_size=1, stride=1)
-        self.adaptive_pool = nn.AdaptiveAvgPool2d((1, 1))  # Reduce to a fixed 1x1 size
+        self.conv2 = nn.Conv2d(256, num_keypoints, kernel_size=1, stride=1)
 
     def forward(self, x):
         x = torch.relu(self.conv1(x))
         x = self.conv2(x)
-        x = self.adaptive_pool(x)  # Reduce to [batch_size, num_keypoints * 3, 1, 1]
-        x = x.view(x.size(0), -1)  # Flatten to [batch_size, num_keypoints * 3]
         return x
-
 
 class CascadedPyramidNetwork(nn.Module):
     def __init__(self, num_keypoints=num_keypoints):
@@ -55,6 +52,9 @@ class CascadedPyramidNetwork(nn.Module):
         # Keypoint Head for final prediction
         self.keypoint_head = KeypointHead(256, num_keypoints)
 
+        # Upsample layer to match the input image size
+        self.upsample = nn.Upsample(size=(image_size, image_size), mode='bilinear', align_corners=False)
+
     def forward(self, x):
         # Process the input tensor through the initial ResNet layers
         x = self.conv1(x)
@@ -75,11 +75,10 @@ class CascadedPyramidNetwork(nn.Module):
         fpn_output = self.fpn(features)
         fpn_out = fpn_output["c4"]
 
-        # Apply the keypoint detection head
-        keypoint_predictions = self.keypoint_head(fpn_out)
+        # Apply the keypoint detection head to get heatmaps
+        keypoint_heatmaps = self.keypoint_head(fpn_out)
 
-        # Adjust the shape to (batch_size, num_keypoints, 3)
-        batch_size = keypoint_predictions.shape[0]
-        num_keypoints = keypoint_predictions.shape[1] // 3
-        keypoint_predictions = keypoint_predictions.view(batch_size, num_keypoints, 3)
-        return keypoint_predictions
+        # Upsample the heatmaps to the input image size
+        keypoint_heatmaps = self.upsample(keypoint_heatmaps)
+
+        return keypoint_heatmaps

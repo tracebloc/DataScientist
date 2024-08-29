@@ -4,8 +4,8 @@ import torch.nn as nn
 framework = "pytorch"
 model_type = ""
 main_class = "OpenPoseKeypointDetector"
-image_size = 32
-batch_size = 16
+image_size = 64
+batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
 num_keypoints = 16

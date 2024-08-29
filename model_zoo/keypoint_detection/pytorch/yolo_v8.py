@@ -2,21 +2,19 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 # Configuration
 framework = "pytorch"
 model_type = ""
-main_class = "KeypointDetectionModel"
+main_class = "MyModel"
 image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
 num_keypoints = 16
 
-
-class KeypointDetectionModel(nn.Module):
+class MyModel(nn.Module):
     def __init__(self, num_keypoints=16):
-        super(KeypointDetectionModel, self).__init__()
+        super(MyModel, self).__init__()
         self.num_keypoints = num_keypoints
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.to(self.device)

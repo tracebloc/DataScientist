@@ -3,13 +3,14 @@ import torch.nn as nn
 
 # Configuration
 framework = "pytorch"
-model_type = ""
+model_type = "heatmap"
 main_class = "HRNetKeypointDetection"
 image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
 num_keypoints = 16
+
 
 class HRNetKeypointDetection(nn.Module):
     def __init__(self, num_keypoints: int = num_keypoints, input_channels: int = 3):
@@ -32,8 +33,11 @@ class HRNetKeypointDetection(nn.Module):
             nn.ReLU(inplace=True),
         )
 
-        # Final layer to predict keypoint coordinates (x, y) and visibility (v)
-        self.fc = nn.Linear(512, num_keypoints * 3)
+        # Final layer to predict keypoint heatmaps
+        self.heatmap_conv = nn.Conv2d(512, num_keypoints, kernel_size=1, stride=1, padding=0)
+
+        # Upsample layer to match the input image size
+        self.upsample = nn.Upsample(size=(image_size, image_size), mode='bilinear', align_corners=False)
 
     def forward(self, x: torch.Tensor):
         # Input shape: (batch_size, input_channels, height, width)
@@ -42,12 +46,10 @@ class HRNetKeypointDetection(nn.Module):
         # Extract features using the HRNet-like backbone
         features = self.backbone(x)
 
-        # Global Average Pooling to reduce the spatial dimensions
-        pooled_features = nn.functional.adaptive_avg_pool2d(features, (1, 1)).view(
-            batch_size, -1
-        )
+        # Apply the final convolution layer to get the heatmaps
+        heatmaps = self.heatmap_conv(features)
 
-        # Final layer to get the keypoints and visibility
-        keypoints = self.fc(pooled_features).view(batch_size, self.num_keypoints, 3)
+        # Upsample the heatmaps to the input image size
+        heatmaps = self.upsample(heatmaps)
 
-        return keypoints
+        return heatmaps

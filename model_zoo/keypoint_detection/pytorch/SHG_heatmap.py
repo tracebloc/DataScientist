@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 # Configuration
 framework = "pytorch"
-model_type = ""
+model_type = "heatmap"
 main_class = "StackHourglass"
 # for this model image_size minimum value should be 64
 image_size = 64
@@ -55,29 +56,31 @@ class Hourglass(nn.Module):
 
         self.middle = ResidualBlock(num_channels, num_channels)
 
-    def forward(self, x):
+    def forward(self, x, original_size):
         skip_connections = []
 
         for down, skip in zip(self.downsample_layers, self.skip_connections):
             x = down(x)
             skip_connections.append(skip(x))
-            x = nn.functional.avg_pool2d(x, 2)
+            x = F.avg_pool2d(x, 2)
 
         x = self.middle(x)
 
         for up, skip in zip(self.upsample_layers, reversed(skip_connections)):
-            x = nn.functional.interpolate(x, scale_factor=2, mode="nearest")
+            x = F.interpolate(x, scale_factor=2, mode="nearest")
             if x.size(2) != skip.size(2) or x.size(3) != skip.size(3):
-                x = nn.functional.pad(
+                x = F.pad(
                     x, (0, skip.size(3) - x.size(3), 0, skip.size(2) - x.size(2))
                 )
             x = up(x) + skip
+
+        x = F.interpolate(x, size=original_size, mode="bilinear", align_corners=False)
 
         return x
 
 
 class StackHourglass(nn.Module):
-    def __init__(self, num_stacks=8, stack_channels=256, num_keypoints=num_keypoints):
+    def __init__(self, num_stacks=8, stack_channels=256, num_keypoints=16):
         super(StackHourglass, self).__init__()
         self.num_stacks = num_stacks
         self.num_channels = stack_channels
@@ -96,27 +99,19 @@ class StackHourglass(nn.Module):
         )
         self.output_layers = nn.ModuleList(
             [
-                nn.Sequential(
-                    nn.AdaptiveAvgPool2d((1, 1)),
-                    nn.Flatten(),
-                    nn.Linear(stack_channels, num_keypoints * 3),
-                )
+                nn.Conv2d(stack_channels, num_keypoints, kernel_size=1, stride=1, padding=0)
                 for _ in range(num_stacks)
             ]
         )
 
     def forward(self, x):
+        original_size = x.shape[2:]  # Store original input size (height, width)
         x = self.pre_layers(x)
 
         outputs = []
         for hg, out_layer in zip(self.hourglasses, self.output_layers):
-            x = hg(x)
+            x = hg(x, original_size)
             out = out_layer(x)
-
-            # Ensure the tensor has appropriate dimensions
-            batchsize = out.shape[0]
-            out = out.view(batchsize, self.num_keypoints, 3)
-
             outputs.append(out)
 
-        return outputs[-1]  # return last stack result
+        return outputs[-1]  # return the heatmaps from the last stack
