@@ -8,7 +8,7 @@ image_size = 256
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 
 class CPMStage(nn.Module):
@@ -40,10 +40,10 @@ class CPMStage(nn.Module):
 
 
 class CPM(nn.Module):
-    def __init__(self, in_channels=3, num_keypoints=num_keypoints, num_stages=6):
+    def __init__(self, in_channels=3, num_feature_points=num_feature_points, num_stages=6):
         super(CPM, self).__init__()
         self.in_channels = in_channels
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
         self.num_stages = num_stages
 
         self.conv1 = nn.Conv2d(in_channels, 128, kernel_size=3, stride=1, padding=1)
@@ -56,7 +56,7 @@ class CPM(nn.Module):
             self.stages.append(stage)
 
         self.conv_out = nn.Conv2d(
-            128, num_keypoints * 3, kernel_size=1, stride=1, padding=0
+            128, num_feature_points * 3, kernel_size=1, stride=1, padding=0
         )
 
     def forward(self, x):
@@ -69,6 +69,6 @@ class CPM(nn.Module):
             out = stage(out)
 
         out = self.conv_out(out)
-        out = out.view(batch_size, self.num_keypoints, 3, height, width)
+        out = out.view(batch_size, self.num_feature_points, 3, height, width)
         out = out.mean(dim=(-2, -1))  # Take the mean across height and width dimensions
         return out

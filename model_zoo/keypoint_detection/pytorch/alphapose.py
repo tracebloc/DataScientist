@@ -9,7 +9,7 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 
 config = {

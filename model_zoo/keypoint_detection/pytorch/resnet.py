@@ -12,10 +12,10 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class SimpleBaseline(nn.Module):
-    def __init__(self, num_keypoints=num_keypoints):
+    def __init__(self, num_feature_points=num_feature_points):
         super(SimpleBaseline, self).__init__()
         # Load a pre-trained ResNet backbone
         backbone = models.resnet50(pretrained=True)
@@ -43,7 +43,7 @@ class SimpleBaseline(nn.Module):
         )
 
         # Final layer to produce the heatmap
-        self.final_layer = nn.Conv2d(256, num_keypoints, kernel_size=1, stride=1)
+        self.final_layer = nn.Conv2d(256, num_feature_points, kernel_size=1, stride=1)
 
     def forward(self, x):
         x = self.backbone(x)
@@ -51,10 +51,10 @@ class SimpleBaseline(nn.Module):
         heatmap = self.final_layer(x)
 
         # Extract keypoints by finding the maximum locations in the heatmaps
-        batch_size, num_keypoints, _, _ = heatmap.size()
-        keypoints = torch.zeros((batch_size, num_keypoints, 3), device=heatmap.device)
+        batch_size, num_feature_points, _, _ = heatmap.size()
+        keypoints = torch.zeros((batch_size, num_feature_points, 3), device=heatmap.device)
 
-        for i in range(num_keypoints):
+        for i in range(num_feature_points):
             heatmap_i = heatmap[:, i, :, :].reshape(batch_size, -1)
             maxvals, idxs = torch.max(heatmap_i, dim=1)
             keypoints[:, i, 0] = idxs % heatmap.size(3)  # X-coordinate

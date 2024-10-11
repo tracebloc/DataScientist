@@ -10,12 +10,12 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class DeepPoseModel(nn.Module):
-    def __init__(self, num_keypoints: int = num_keypoints, image_shape=64):
+    def __init__(self, num_feature_points: int = num_feature_points, image_shape=64):
         super(DeepPoseModel, self).__init__()
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
 
         # Define the CNN backbone layers
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3)
@@ -29,7 +29,7 @@ class DeepPoseModel(nn.Module):
 
         # Flatten size adjusted for adaptive pooling
         self.fc1 = nn.Linear(1024, 1024)
-        self.fc2 = nn.Linear(1024, num_keypoints * 3)
+        self.fc2 = nn.Linear(1024, num_feature_points * 3)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -44,7 +44,7 @@ class DeepPoseModel(nn.Module):
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
 
-        # Reshape to the output format: (batch_size, num_keypoints, 3)
-        x = x.view(-1, self.num_keypoints, 3)
+        # Reshape to the output format: (batch_size, num_feature_points, 3)
+        x = x.view(-1, self.num_feature_points, 3)
 
         return x

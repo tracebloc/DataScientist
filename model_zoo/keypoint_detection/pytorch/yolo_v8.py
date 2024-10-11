@@ -10,12 +10,12 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class MyModel(nn.Module):
-    def __init__(self, num_keypoints=16):
+    def __init__(self, num_feature_points=16):
         super(MyModel, self).__init__()
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.to(self.device)
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1)
@@ -41,7 +41,7 @@ class MyModel(nn.Module):
 
     def initialize_fc_layers(self):
         """Initialize fully connected layers once flattened size is known."""
-        self.coords_fc = nn.Linear(self.flattened_size, self.num_keypoints * 3).to(self.device)
+        self.coords_fc = nn.Linear(self.flattened_size, self.num_feature_points * 3).to(self.device)
 
     def forward(self, x):
         if self.flattened_size is None:
@@ -64,6 +64,6 @@ class MyModel(nn.Module):
 
         # Calculate coordinates
         coords = self.coords_fc(x_flat)
-        coords = coords.view(-1, self.num_keypoints, 3)  # Reshape to [batch_size, num_keypoints, 2]
+        coords = coords.view(-1, self.num_feature_points, 3)  # Reshape to [batch_size, num_feature_points, 2]
 
         return coords

@@ -9,12 +9,12 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class HRNetKeypointDetection(nn.Module):
-    def __init__(self, num_keypoints: int = num_keypoints, input_channels: int = 3):
+    def __init__(self, num_feature_points: int = num_feature_points, input_channels: int = 3):
         super(HRNetKeypointDetection, self).__init__()
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
 
         # Example HRNet-style backbone: Modify it to fit your specific needs
         self.backbone = nn.Sequential(
@@ -33,7 +33,7 @@ class HRNetKeypointDetection(nn.Module):
         )
 
         # Final layer to predict keypoint coordinates (x, y) and visibility (v)
-        self.fc = nn.Linear(512, num_keypoints * 3)
+        self.fc = nn.Linear(512, num_feature_points * 3)
 
     def forward(self, x: torch.Tensor):
         # Input shape: (batch_size, input_channels, height, width)
@@ -48,6 +48,6 @@ class HRNetKeypointDetection(nn.Module):
         )
 
         # Final layer to get the keypoints and visibility
-        keypoints = self.fc(pooled_features).view(batch_size, self.num_keypoints, 3)
+        keypoints = self.fc(pooled_features).view(batch_size, self.num_feature_points, 3)
 
         return keypoints

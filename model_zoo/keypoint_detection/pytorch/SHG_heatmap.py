@@ -11,7 +11,7 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -80,11 +80,11 @@ class Hourglass(nn.Module):
 
 
 class StackHourglass(nn.Module):
-    def __init__(self, num_stacks=8, stack_channels=256, num_keypoints=16):
+    def __init__(self, num_stacks=8, stack_channels=256, num_feature_points=16):
         super(StackHourglass, self).__init__()
         self.num_stacks = num_stacks
         self.num_channels = stack_channels
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
 
         self.pre_layers = nn.Sequential(
             nn.Conv2d(3, stack_channels, kernel_size=7, stride=2, padding=3),
@@ -99,7 +99,7 @@ class StackHourglass(nn.Module):
         )
         self.output_layers = nn.ModuleList(
             [
-                nn.Conv2d(stack_channels, num_keypoints, kernel_size=1, stride=1, padding=0)
+                nn.Conv2d(stack_channels, num_feature_points, kernel_size=1, stride=1, padding=0)
                 for _ in range(num_stacks)
             ]
         )
