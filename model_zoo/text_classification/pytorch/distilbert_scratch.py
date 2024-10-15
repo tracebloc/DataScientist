@@ -8,9 +8,9 @@ main_class = "MyModel"
 category = "text_classification"
 model_type = ""
 batch_size = 16
-output_classes = 5
+output_classes = 134
 
 
-def MyModel(num_classes=5):
+def MyModel(num_classes=output_classes):
     config = AutoConfig.from_pretrained(model_id, num_labels=num_classes)
     return AutoModelForSequenceClassification.from_config(config)
