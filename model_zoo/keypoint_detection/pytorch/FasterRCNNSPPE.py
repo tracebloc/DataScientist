@@ -11,12 +11,12 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class FasterRCNNSPPE(nn.Module):
-    def __init__(self, num_keypoints=num_keypoints):
+    def __init__(self, num_feature_points=num_feature_points):
         super(FasterRCNNSPPE, self).__init__()
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
 
         # Load the Faster R-CNN model to get the backbone (ResNet-50)
         model = fasterrcnn_resnet50_fpn(pretrained=True)
@@ -32,7 +32,7 @@ class FasterRCNNSPPE(nn.Module):
         num_features = (
             256  # Feature size; confirm actual dimensions from the backbone output
         )
-        self.fc = nn.Linear(num_features, num_keypoints * 3)
+        self.fc = nn.Linear(num_features, num_feature_points * 3)
 
     def forward(self, x):
         # Ensure x is a tensor and process through the backbone
@@ -52,6 +52,6 @@ class FasterRCNNSPPE(nn.Module):
         # Pass through the fully connected layer for keypoint prediction
         x = self.fc(x)
 
-        # Reshape to (batch_size, num_keypoints, 3)
-        x = x.view(-1, self.num_keypoints, 3)
+        # Reshape to (batch_size, num_feature_points, 3)
+        x = x.view(-1, self.num_feature_points, 3)
         return x

@@ -11,12 +11,12 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class ResNetSPPE(nn.Module):
-    def __init__(self, num_keypoints=num_keypoints, input_channels=3):
+    def __init__(self, num_feature_points=num_feature_points, input_channels=3):
         super(ResNetSPPE, self).__init__()
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
 
         # Load a pre-trained ResNet model (here we use ResNet-50)
         resnet = models.resnet50(pretrained=True)
@@ -35,7 +35,7 @@ class ResNetSPPE(nn.Module):
 
         # Add a fully connected layer to predict keypoints' x, y coordinates and visibility
         num_features = resnet.fc.in_features
-        self.fc = nn.Linear(num_features, num_keypoints * 3)
+        self.fc = nn.Linear(num_features, num_feature_points * 3)
 
     def forward(self, x):
         # Pass the input through the ResNet backbone
@@ -50,6 +50,6 @@ class ResNetSPPE(nn.Module):
         # Pass through the fully connected layer
         x = self.fc(x)
 
-        # Reshape to (batch_size, num_keypoints, 3)
-        x = x.view(-1, self.num_keypoints, 3)
+        # Reshape to (batch_size, num_feature_points, 3)
+        x = x.view(-1, self.num_feature_points, 3)
         return x

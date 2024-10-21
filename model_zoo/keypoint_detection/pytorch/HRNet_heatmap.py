@@ -9,13 +9,13 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 
 class HRNetKeypointDetection(nn.Module):
-    def __init__(self, num_keypoints: int = num_keypoints, input_channels: int = 3):
+    def __init__(self, num_feature_points: int = num_feature_points, input_channels: int = 3):
         super(HRNetKeypointDetection, self).__init__()
-        self.num_keypoints = num_keypoints
+        self.num_feature_points = num_feature_points
 
         # Example HRNet-style backbone: Modify it to fit your specific needs
         self.backbone = nn.Sequential(
@@ -34,7 +34,7 @@ class HRNetKeypointDetection(nn.Module):
         )
 
         # Final layer to predict keypoint heatmaps
-        self.heatmap_conv = nn.Conv2d(512, num_keypoints, kernel_size=1, stride=1, padding=0)
+        self.heatmap_conv = nn.Conv2d(512, num_feature_points, kernel_size=1, stride=1, padding=0)
 
         # Upsample layer to match the input image size
         self.upsample = nn.Upsample(size=(image_size, image_size), mode='bilinear', align_corners=False)

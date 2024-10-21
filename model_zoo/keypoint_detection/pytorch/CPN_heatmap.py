@@ -12,15 +12,15 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 
 
 class KeypointHead(nn.Module):
-    def __init__(self, in_channels, num_keypoints):
+    def __init__(self, in_channels, num_feature_points):
         super(KeypointHead, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, 256, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(256, num_keypoints, kernel_size=1, stride=1)
+        self.conv2 = nn.Conv2d(256, num_feature_points, kernel_size=1, stride=1)
 
     def forward(self, x):
         x = torch.relu(self.conv1(x))
@@ -28,7 +28,7 @@ class KeypointHead(nn.Module):
         return x
 
 class CascadedPyramidNetwork(nn.Module):
-    def __init__(self, num_keypoints=num_keypoints):
+    def __init__(self, num_feature_points=num_feature_points):
         super(CascadedPyramidNetwork, self).__init__()
 
         # Load a pretrained ResNet backbone
@@ -50,7 +50,7 @@ class CascadedPyramidNetwork(nn.Module):
         self.fpn = FeaturePyramidNetwork(in_channels, out_channels=256)
 
         # Keypoint Head for final prediction
-        self.keypoint_head = KeypointHead(256, num_keypoints)
+        self.keypoint_head = KeypointHead(256, num_feature_points)
 
         # Upsample layer to match the input image size
         self.upsample = nn.Upsample(size=(image_size, image_size), mode='bilinear', align_corners=False)

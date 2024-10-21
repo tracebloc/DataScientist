@@ -8,7 +8,7 @@ image_size = 64
 batch_size = 128
 output_classes = 1
 category = "keypoint_detection"
-num_keypoints = 16
+num_feature_points = 16
 
 class VGGBackbone(nn.Module):
     def __init__(self):
@@ -43,7 +43,7 @@ class VGGBackbone(nn.Module):
 
 
 class StageModule(nn.Module):
-    def __init__(self, in_channels: int, num_keypoints: int):
+    def __init__(self, in_channels: int, num_feature_points: int):
         super(StageModule, self).__init__()
         self.module = nn.Sequential(
             nn.Conv2d(in_channels, 128, kernel_size=7, padding=3),
@@ -54,7 +54,7 @@ class StageModule(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(128, 128, kernel_size=7, padding=3),
             nn.ReLU(inplace=True),
-            nn.Conv2d(128, num_keypoints * 3, kernel_size=1),
+            nn.Conv2d(128, num_feature_points * 3, kernel_size=1),
         )
 
     def forward(self, x):
@@ -62,18 +62,18 @@ class StageModule(nn.Module):
 
 
 class OpenPoseKeypointDetector(nn.Module):
-    def __init__(self, num_keypoints: int = num_keypoints, stages: int = 3):
+    def __init__(self, num_feature_points: int = num_feature_points, stages: int = 3):
         super(OpenPoseKeypointDetector, self).__init__()
         # Backbone
         self.backbone = VGGBackbone()
 
         # Initial stage module (backbone output to heatmaps)
-        self.initial_stage = StageModule(256, num_keypoints)
+        self.initial_stage = StageModule(256, num_feature_points)
 
         # Additional stage modules for refinement
         self.stages = nn.ModuleList(
             [
-                StageModule(256 + num_keypoints * 3, num_keypoints)
+                StageModule(256 + num_feature_points * 3, num_feature_points)
                 for _ in range(stages - 1)
             ]
         )
@@ -90,7 +90,7 @@ class OpenPoseKeypointDetector(nn.Module):
             concatenated_input = torch.cat([backbone_features, stage_output], dim=1)
             stage_output = stage(concatenated_input)
 
-        # Pool spatially to produce the final (batch_size, num_keypoints, 3) tensor
+        # Pool spatially to produce the final (batch_size, num_feature_points, 3) tensor
         batch_size, _, height, width = stage_output.shape
         output = nn.functional.adaptive_avg_pool2d(stage_output, (1, 1)).view(
             batch_size, -1, 3
