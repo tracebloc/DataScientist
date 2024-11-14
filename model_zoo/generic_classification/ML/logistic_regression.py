@@ -1,8 +1,8 @@
 import torch.nn as nn
 from sklearn.linear_model import LogisticRegression
 
-framework = "pytorch"
-model_type = "ml"
+framework = "sklearn"
+model_type = "linear"
 main_class = "MyModel"
 image_size = 69
 batch_size = 4

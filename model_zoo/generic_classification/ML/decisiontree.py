@@ -1,9 +1,9 @@
 import torch.nn as nn
 from sklearn.tree import DecisionTreeClassifier
 
-framework = "pytorch"
-model_type = "ml"
-main_class = "MyModel"
+framework = "sklearn"
+model_type = "tree"
+main_method = "MyModel"
 image_size = 69
 batch_size = 4
 output_classes = 2

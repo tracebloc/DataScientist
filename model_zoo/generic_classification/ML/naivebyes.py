@@ -1,8 +1,8 @@
 import torch.nn as nn
 from sklearn.naive_bayes import GaussianNB
 
-framework = "pytorch"
-model_type = "ml"
+framework = "sklearn"
+model_type = "naive"
 main_class = "MyModel"
 image_size = 69
 batch_size = 4

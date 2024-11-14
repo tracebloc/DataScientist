@@ -1,8 +1,8 @@
 import torch.nn as nn
 from sklearn.neighbors import KNeighborsClassifier
 
-framework = "pytorch"
-model_type = "ml"
+framework = "sklearn"
+model_type = "knn"
 main_class = "MyModel"
 image_size = 69
 batch_size = 4
