@@ -3,7 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 framework = "sklearn"
 model_type = "knn"
-main_class = "MyModel"
+main_method = "MyModel"
 image_size = 69
 batch_size = 4
 output_classes = 2
